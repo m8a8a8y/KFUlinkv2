@@ -6,6 +6,7 @@
     <title>KFU Link - Hackathons</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
@@ -416,10 +417,16 @@
                 <li class="nav-item"><a href="hackathons.html" class="nav-link"><i class="fas fa-code"></i> Hackathons</a></li>
             </ul>
         </nav>
-        <div class="right-section">
-            <button class="sign-out">Sign Out</button>
-            <div class="profile">JS</div>
-        </div>
+       <!-- Add this to the right-section div in the header -->
+<div class="right-section">
+    <button class="sign-out">
+        <a href="login.html" style="text-decoration: none; color: inherit;">Sign Out</a>
+    </button>
+    <div class="chatbot-icon" id="chatbotButton">
+        <i class="fas fa-robot"></i>
+    </div>
+    <div class="profile">JS</div>
+</div>
     </header>
 
     <div class="content">
@@ -519,6 +526,22 @@
                     <p>No certifications added yet</p>
                 </div>
             </div>
+
+
+
+            <div class="profile-section">
+                <h3>Hackathons</h3>
+                <div id="profileHackathons" class="profile-list">
+                    <p>No hackathons added yet</p>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <h3>Projects</h3>
+                <div id="profileProjects" class="profile-list">
+                    <p>No projects added yet</p>
+                </div>
+            </div>
             
             <div class="profile-section">
                 <h3>Skills</h3>
@@ -532,7 +555,30 @@
         </div>
     </div>
 
+    <!-- Chatbot Container -->
+<div id="chatbotContainer" class="chatbot-container">
+    <div class="chatbot-header">
+        <h3>KFU Link Assistant</h3>
+        <button class="chatbot-close" id="chatbotClose">&times;</button>
+    </div>
+    <div class="chatbot-messages" id="chatbotMessages">
+        <div class="chatbot-message bot-message">
+            Hello! I'm your KFU Link assistant. How can I help you today?
+        </div>
+    </div>
+    <div class="chatbot-input">
+        <input type="text" id="chatbotInput" placeholder="Type your question here...">
+        <button id="chatbotSend"><i class="fas fa-paper-plane"></i></button>
+    </div>
+    <div class="quick-questions">
+        <button class="quick-question">Track my progress</button>
+        <button class="quick-question">Find opportunities</button>
+        <button class="quick-question">Pathway recommendations</button>
+    </div>
+</div>
+
     <script src="auth.js"></script>
+    <script src="chatbot.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Get user data from localStorage
