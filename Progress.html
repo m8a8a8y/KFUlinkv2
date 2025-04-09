@@ -6,6 +6,7 @@
     <title>KFU Link - Student Progress</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
@@ -396,17 +397,23 @@
             </a>
         </div>
         <nav>
-            <ul class="nav-menu">
-                <li class="nav-item"><a href="Progress.html" class="nav-link"><i class="fas fa-chart-line"></i> Progress</a></li>
-                <li class="nav-item"><a href="pathway.html" class="nav-link"><i class="fas fa-road"></i> Pathways</a></li>
-                <li class="nav-item"><a href="Opportunities.html" class="nav-link"><i class="fas fa-briefcase"></i> Opportunities</a></li>
-                <li class="nav-item"><a href="hackathons.html" class="nav-link"><i class="fas fa-code"></i> Hackathons</a></li>
-            </ul>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="Progress.html" class="nav-link"><i class="fas fa-chart-line"></i> Progress</a></li>
+                    <li class="nav-item"><a href="pathway.html" class="nav-link"><i class="fas fa-road"></i> Pathways</a></li>
+                    <li class="nav-item"><a href="Opportunities.html" class="nav-link"><i class="fas fa-briefcase"></i> Opportunities</a></li>
+                    <li class="nav-item"><a href="hackathons.html" class="nav-link"><i class="fas fa-code"></i> Hackathons</a></li>
+                </ul>
         </nav>
-        <div class="right-section">
-            <button class="sign-out">Sign Out</button>
-            <div class="profile">JS</div>
-        </div>
+       <!-- Add this to the right-section div in the header -->
+<div class="right-section">
+    <button class="sign-out">
+        <a href="login.html" style="text-decoration: none; color: inherit;">Sign Out</a>
+    </button>
+    <div class="chatbot-icon" id="chatbotButton">
+        <i class="fas fa-robot"></i>
+    </div>
+    <div class="profile">JS</div>
+</div>
     </header>
     
     <main>
@@ -448,9 +455,33 @@
                 </ul>
             </div>
         </section>
+
+        <section class="dashboard-section">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 class="section-title">Your Hackathon Participation</h3>
+                <button id="addHackathonBtn" class="btn btn-add">+ Add Hackathon</button>
+            </div>
+            <div class="list-section">
+                <ul id="hackathonsList">
+                    <!-- Hackathons will be added here dynamically -->
+                </ul>
+            </div>
+        </section>
+
+        <section class="dashboard-section">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 class="section-title">Your Projects</h3>
+                <button id="addProjectBtn" class="btn btn-add">+ Add Project</button>
+            </div>
+            <div class="list-section">
+                <ul id="projectsList">
+                    <!-- Projects will be added here dynamically -->
+                </ul>
+            </div>
+        </section>
     </main>
 
-  
+    <!-- Certification Modal -->
     <div id="certificationModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -493,7 +524,7 @@
         </div>
     </div>
 
-    
+    <!-- Skill Modal -->
     <div id="skillModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -528,6 +559,7 @@
         </div>
     </div>
     
+    <!-- Interest Modal -->
     <div id="interestModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -562,6 +594,141 @@
         </div>
     </div>
     
+    <!-- Hackathon Modal -->
+    <div id="hackathonModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 class="modal-title">Add Hackathon Participation</h3>
+            <form id="hackathonForm">
+                <div class="form-group">
+                    <label for="hackathonName">Hackathon Name</label>
+                    <input type="text" id="hackathonName" class="form-control" placeholder="Enter hackathon name" required>
+                </div>
+                <div class="form-group">
+                    <label for="hackathonDate">Date Participated</label>
+                    <input type="date" id="hackathonDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="hackathonRole">Your Role</label>
+                    <input type="text" id="hackathonRole" class="form-control" placeholder="E.g., Developer, Designer, Team Lead">
+                </div>
+                <div class="form-group">
+                    <label for="hackathonDescription">Description</label>
+                    <textarea id="hackathonDescription" class="form-control" rows="3" placeholder="Brief description of your participation"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="hackathonOutcome">Outcome/Achievement</label>
+                    <input type="text" id="hackathonOutcome" class="form-control" placeholder="E.g., Won 1st place, Finalist, etc.">
+                </div>
+                <div class="form-group">
+                    <label>Skills Used</label>
+                    <div class="tags-container" id="hackathon-skills-tags"></div>
+                    <div class="tag-input-container">
+                        <input type="text" id="hackathon-skill-input" class="tag-input" placeholder="Add a skill used">
+                        <button type="button" id="add-hackathon-skill-btn" class="add-tag-btn">Add</button>
+                    </div>
+                    <input type="hidden" id="hackathonSkills" name="hackathonSkills">
+                </div>
+                <button type="submit" class="btn">Add Hackathon</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Project Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 class="modal-title">Add Project</h3>
+            <form id="projectForm">
+                <div class="form-group">
+                    <label for="projectName">Project Name</label>
+                    <input type="text" id="projectName" class="form-control" placeholder="Enter project name" required>
+                </div>
+                <div class="form-group">
+                    <label for="projectDate">Date Completed</label>
+                    <input type="date" id="projectDate" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="projectDescription">Description</label>
+                    <textarea id="projectDescription" class="form-control" rows="3" placeholder="Brief description of the project" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="projectLink">Project Link (optional)</label>
+                    <input type="url" id="projectLink" class="form-control" placeholder="https://">
+                </div>
+                <div class="form-group">
+                    <label>Technologies Used</label>
+                    <div class="tags-container" id="project-tech-tags"></div>
+                    <div class="tag-input-container">
+                        <input type="text" id="project-tech-input" class="tag-input" placeholder="Add a technology used">
+                        <button type="button" id="add-project-tech-btn" class="add-tag-btn">Add</button>
+                    </div>
+                    <input type="hidden" id="projectTechnologies" name="projectTechnologies">
+                </div>
+                <button type="submit" class="btn">Add Project</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="profile-modal">
+        <div class="profile-content">
+            <div class="profile-header">
+                <div class="profile-pic">
+                    <img src="default-profile.jpg" alt="Profile Picture" id="profileImage">
+                    <button class="edit-pic-btn">Edit</button>
+                </div>
+                <h2 id="profileName">Ahmad</h2>
+                <p id="profileCollege">computer science and information systems</p>
+            </div>
+            
+            <div class="profile-section">
+                <h3>Personal Information</h3>
+                <div class="info-item">
+                    <span>Email:</span>
+                    <span id="profileEmail">222444555@kfu.Student.edu.sa</span>
+                </div>
+                <div class="info-item">
+                    <span>Student ID:</span>
+                    <span id="profileId">222444555</span>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <h3>Certifications</h3>
+                <div id="profileCertifications" class="certifications-list">
+                    <p>No certifications added yet</p>
+                </div>
+            </div>
+            
+
+
+            <div class="profile-section">
+                <h3>Hackathons</h3>
+                <div id="profileHackathons" class="profile-list">
+                    <p>No hackathons added yet</p>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <h3>Projects</h3>
+                <div id="profileProjects" class="profile-list">
+                    <p>No projects added yet</p>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3>Skills</h3>
+                <div id="profileSkills" class="skills-list">
+                    <p>No skills added yet</p>
+                </div>
+            </div>
+            
+            <button id="generateResume">Generate Resume</button>
+            <button class="close-profile-btn">Close</button>
+        </div>
+    </div>
+
     <footer class="footer">
         <div>
             <h4>Contact Us</h4>
@@ -595,49 +762,31 @@
         <p>All Rights Reserved for KFU © 2025 | Designed and Developed by Deanship of E-Learning and Information Technology | <a href="#">Policies</a> | <a href="#">Site Map</a></p>
     </div>
 
-    <!-- Profile Modal -->
-    <div id="profileModal" class="profile-modal">
-        <div class="profile-content">
-            <div class="profile-header">
-                <div class="profile-pic">
-                    <img src="default-profile.jpg" alt="Profile Picture" id="profileImage">
-                    <button class="edit-pic-btn">Edit</button>
-                </div>
-                <h2 id="profileName">Ahmad</h2>
-                <p id="profileCollege">computer science and information systems </p>
-            </div>
-            
-            <div class="profile-section">
-                <h3>Personal Information</h3>
-                <div class="info-item">
-                    <span>Email:</span>
-                    <span id="profileEmail">222444555@kfu.Student.edu.sa</span>
-                </div>
-                <div class="info-item">
-                    <span>Student ID:</span>
-                    <span id="profileId">222444555</span>
-                </div>
-            </div>
-            
-            <div class="profile-section">
-                <h3>Certifications</h3>
-                <div id="profileCertifications" class="certifications-list">
-                    <p>No certifications added yet</p>
-                </div>
-            </div>
-            
-            <div class="profile-section">
-                <h3>Skills</h3>
-                <div id="profileSkills" class="skills-list">
-                    <p>No skills added yet</p>
-                </div>
-    
-<button id="generateResume">Generate Resume</button>
-<button class="close-profile-btn">Close</button>
-</div>
+
+    <!-- Chatbot Container -->
+<div id="chatbotContainer" class="chatbot-container">
+    <div class="chatbot-header">
+        <h3>KFU Link Assistant</h3>
+        <button class="chatbot-close" id="chatbotClose">&times;</button>
     </div>
+    <div class="chatbot-messages" id="chatbotMessages">
+        <div class="chatbot-message bot-message">
+            Hello! I'm your KFU Link assistant. How can I help you today?
+        </div>
+    </div>
+    <div class="chatbot-input">
+        <input type="text" id="chatbotInput" placeholder="Type your question here...">
+        <button id="chatbotSend"><i class="fas fa-paper-plane"></i></button>
+    </div>
+    <div class="quick-questions">
+        <button class="quick-question">Track my progress</button>
+        <button class="quick-question">Find opportunities</button>
+        <button class="quick-question">Pathway recommendations</button>
+    </div>
+</div>
 
     <script src="auth.js"></script>
+    <script src="chatbot.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
            // Check if user is logged in
@@ -668,18 +817,28 @@
             let interests = JSON.parse(localStorage.getItem('userInterests')) || [];
             let currentInterests = [...interests];
             
+            // Initialize hackathons and projects
+            let hackathons = JSON.parse(localStorage.getItem('hackathons')) || [];
+            let projects = JSON.parse(localStorage.getItem('projects')) || [];
+            
             // DOM elements
             const certificationsList = document.getElementById('certificationsList');
             const skillsList = document.getElementById('skillsList');
             const interestsList = document.getElementById('interestsList');
+            const hackathonsList = document.getElementById('hackathonsList');
+            const projectsList = document.getElementById('projectsList');
             
             // Modal elements
             const certificationModal = document.getElementById('certificationModal');
             const skillModal = document.getElementById('skillModal');
             const interestModal = document.getElementById('interestModal');
+            const hackathonModal = document.getElementById('hackathonModal');
+            const projectModal = document.getElementById('projectModal');
             const addCertificationBtn = document.getElementById('addCertificationBtn');
             const addSkillBtn = document.getElementById('addSkillBtn');
             const addInterestBtn = document.getElementById('addInterestBtn');
+            const addHackathonBtn = document.getElementById('addHackathonBtn');
+            const addProjectBtn = document.getElementById('addProjectBtn');
             const closeButtons = document.querySelectorAll('.close');
             
             // Certification form elements
@@ -711,7 +870,32 @@
             const interestsHidden = document.getElementById('interests');
             const interestOptions = document.querySelectorAll('#interestModal .skill-options .option-item');
             
+            // Hackathon form elements
+            const hackathonForm = document.getElementById('hackathonForm');
+            const hackathonNameInput = document.getElementById('hackathonName');
+            const hackathonDateInput = document.getElementById('hackathonDate');
+            const hackathonRoleInput = document.getElementById('hackathonRole');
+            const hackathonDescriptionInput = document.getElementById('hackathonDescription');
+            const hackathonOutcomeInput = document.getElementById('hackathonOutcome');
+            const hackathonSkillsTags = document.getElementById('hackathon-skills-tags');
+            const hackathonSkillInput = document.getElementById('hackathon-skill-input');
+            const addHackathonSkillBtn = document.getElementById('add-hackathon-skill-btn');
+            const hackathonSkillsHidden = document.getElementById('hackathonSkills');
+            
+            // Project form elements
+            const projectForm = document.getElementById('projectForm');
+            const projectNameInput = document.getElementById('projectName');
+            const projectDateInput = document.getElementById('projectDate');
+            const projectDescriptionInput = document.getElementById('projectDescription');
+            const projectLinkInput = document.getElementById('projectLink');
+            const projectTechTags = document.getElementById('project-tech-tags');
+            const projectTechInput = document.getElementById('project-tech-input');
+            const addProjectTechBtn = document.getElementById('add-project-tech-btn');
+            const projectTechnologiesHidden = document.getElementById('projectTechnologies');
+            
             let currentCertificationSkills = [];
+            let currentHackathonSkills = [];
+            let currentProjectTechnologies = [];
             let tempSkills = [...currentSkills]; // Temporary storage for skills being added in modal
             let tempInterests = [...currentInterests]; // Temporary storage for interests being added in modal
 
@@ -744,6 +928,20 @@
                 openModal(interestModal);
             });
 
+            addHackathonBtn.addEventListener('click', () => {
+                currentHackathonSkills = [];
+                updateHackathonSkillsDisplay();
+                hackathonForm.reset();
+                openModal(hackathonModal);
+            });
+
+            addProjectBtn.addEventListener('click', () => {
+                currentProjectTechnologies = [];
+                updateProjectTechnologiesDisplay();
+                projectForm.reset();
+                openModal(projectModal);
+            });
+
             closeButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const modal = this.closest('.modal');
@@ -760,6 +958,12 @@
                 }
                 if (event.target === interestModal) {
                     closeModal(interestModal);
+                }
+                if (event.target === hackathonModal) {
+                    closeModal(hackathonModal);
+                }
+                if (event.target === projectModal) {
+                    closeModal(projectModal);
                 }
             });
 
@@ -842,6 +1046,68 @@
                     btn.addEventListener('click', function() {
                         const index = parseInt(this.getAttribute('data-index'));
                         removeInterest(index);
+                    });
+                });
+            }
+            
+            function renderHackathons() {
+                hackathonsList.innerHTML = '';
+                
+                if (hackathons.length === 0) {
+                    hackathonsList.innerHTML = '<li>No hackathons added yet</li>';
+                    return;
+                }
+                
+                hackathons.forEach((hackathon, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <div>
+                            <strong>${hackathon.name}</strong> - ${hackathon.date}<br>
+                            <small>Role: ${hackathon.role || 'Not specified'}</small><br>
+                            <small>Outcome: ${hackathon.outcome || 'Participated'}</small><br>
+                            <small>Skills: ${hackathon.skills.join(', ')}</small>
+                        </div>
+                        <button class="btn btn-danger" data-index="${index}">Remove</button>
+                    `;
+                    hackathonsList.appendChild(li);
+                });
+                
+                // Add event listeners to remove buttons
+                document.querySelectorAll('#hackathonsList .btn-danger').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        removeHackathon(index);
+                    });
+                });
+            }
+            
+            function renderProjects() {
+                projectsList.innerHTML = '';
+                
+                if (projects.length === 0) {
+                    projectsList.innerHTML = '<li>No projects added yet</li>';
+                    return;
+                }
+                
+                projects.forEach((project, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <div>
+                            <strong>${project.name}</strong>${project.date ? ' - ' + project.date : ''}<br>
+                            <small>${project.description}</small><br>
+                            ${project.link ? `<small><a href="${project.link}" target="_blank">View Project</a></small><br>` : ''}
+                            <small>Technologies: ${project.technologies.join(', ')}</small>
+                        </div>
+                        <button class="btn btn-danger" data-index="${index}">Remove</button>
+                    `;
+                    projectsList.appendChild(li);
+                });
+                
+                // Add event listeners to remove buttons
+                document.querySelectorAll('#projectsList .btn-danger').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        removeProject(index);
                     });
                 });
             }
@@ -933,6 +1199,59 @@
                 renderInterests();
             }
             
+            // Hackathon functions
+            function addHackathon(name, date, role, description, outcome, skills) {
+                hackathons.push({
+                    name,
+                    date,
+                    role,
+                    description,
+                    outcome,
+                    skills
+                });
+                
+                localStorage.setItem('hackathons', JSON.stringify(hackathons));
+                renderHackathons();
+                
+                // Clear form and close modal
+                hackathonForm.reset();
+                currentHackathonSkills = [];
+                updateHackathonSkillsDisplay();
+                closeModal(hackathonModal);
+            }
+            
+            function removeHackathon(index) {
+                hackathons.splice(index, 1);
+                localStorage.setItem('hackathons', JSON.stringify(hackathons));
+                renderHackathons();
+            }
+            
+            // Project functions
+            function addProject(name, date, description, link, technologies) {
+                projects.push({
+                    name,
+                    date,
+                    description,
+                    link,
+                    technologies
+                });
+                
+                localStorage.setItem('projects', JSON.stringify(projects));
+                renderProjects();
+                
+                // Clear form and close modal
+                projectForm.reset();
+                currentProjectTechnologies = [];
+                updateProjectTechnologiesDisplay();
+                closeModal(projectModal);
+            }
+            
+            function removeProject(index) {
+                projects.splice(index, 1);
+                localStorage.setItem('projects', JSON.stringify(projects));
+                renderProjects();
+            }
+            
             // Certification skills management
             function addCertificationSkill() {
                 const skill = certificationSkillInput.value.trim();
@@ -1017,6 +1336,56 @@
                         option.classList.remove('selected');
                     }
                 });
+            }
+            
+            // Hackathon skills management
+            function updateHackathonSkillsDisplay() {
+                hackathonSkillsTags.innerHTML = '';
+                currentHackathonSkills.forEach(skill => {
+                    const tag = document.createElement('div');
+                    tag.className = 'tag';
+                    tag.innerHTML = `
+                        ${skill}
+                        <span class="tag-remove" data-skill="${skill}">×</span>
+                    `;
+                    hackathonSkillsTags.appendChild(tag);
+                });
+                
+                hackathonSkillsHidden.value = JSON.stringify(currentHackathonSkills);
+            }
+            
+            function addHackathonSkill() {
+                const skill = hackathonSkillInput.value.trim();
+                if (skill && !currentHackathonSkills.includes(skill)) {
+                    currentHackathonSkills.push(skill);
+                    updateHackathonSkillsDisplay();
+                    hackathonSkillInput.value = '';
+                }
+            }
+            
+            // Project technologies management
+            function updateProjectTechnologiesDisplay() {
+                projectTechTags.innerHTML = '';
+                currentProjectTechnologies.forEach(tech => {
+                    const tag = document.createElement('div');
+                    tag.className = 'tag';
+                    tag.innerHTML = `
+                        ${tech}
+                        <span class="tag-remove" data-tech="${tech}">×</span>
+                    `;
+                    projectTechTags.appendChild(tag);
+                });
+                
+                projectTechnologiesHidden.value = JSON.stringify(currentProjectTechnologies);
+            }
+            
+            function addProjectTechnology() {
+                const tech = projectTechInput.value.trim();
+                if (tech && !currentProjectTechnologies.includes(tech)) {
+                    currentProjectTechnologies.push(tech);
+                    updateProjectTechnologiesDisplay();
+                    projectTechInput.value = '';
+                }
             }
             
             function addGeneralSkill() {
@@ -1135,6 +1504,73 @@
 
             saveInterestsBtn.addEventListener('click', saveInterests);
             
+            // Hackathon form submission
+            hackathonForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = hackathonNameInput.value.trim();
+                const date = hackathonDateInput.value;
+                const role = hackathonRoleInput.value.trim();
+                const description = hackathonDescriptionInput.value.trim();
+                const outcome = hackathonOutcomeInput.value.trim();
+                const skills = currentHackathonSkills;
+                
+                if (name && date && skills.length > 0) {
+                    addHackathon(name, date, role, description, outcome, skills);
+                } else {
+                    alert('Please fill required fields and add at least one skill');
+                }
+            });
+            
+            addHackathonSkillBtn.addEventListener('click', addHackathonSkill);
+            hackathonSkillInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addHackathonSkill();
+                }
+            });
+            
+            hackathonSkillsTags.addEventListener('click', function(e) {
+                if (e.target.classList.contains('tag-remove')) {
+                    const skill = e.target.dataset.skill;
+                    currentHackathonSkills = currentHackathonSkills.filter(s => s !== skill);
+                    updateHackathonSkillsDisplay();
+                }
+            });
+            
+            // Project form submission
+            projectForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = projectNameInput.value.trim();
+                const date = projectDateInput.value;
+                const description = projectDescriptionInput.value.trim();
+                const link = projectLinkInput.value.trim();
+                const technologies = currentProjectTechnologies;
+                
+                if (name && description && technologies.length > 0) {
+                    addProject(name, date, description, link, technologies);
+                } else {
+                    alert('Please fill required fields and add at least one technology');
+                }
+            });
+            
+            addProjectTechBtn.addEventListener('click', addProjectTechnology);
+            projectTechInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addProjectTechnology();
+                }
+            });
+            
+            projectTechTags.addEventListener('click', function(e) {
+                if (e.target.classList.contains('tag-remove')) {
+                    const tech = e.target.dataset.tech;
+                    currentProjectTechnologies = currentProjectTechnologies.filter(t => t !== tech);
+                    updateProjectTechnologiesDisplay();
+                }
+            });
+            
             // Sign out functionality
             document.querySelector('.sign-out').addEventListener('click', function() {
                 localStorage.removeItem('userLoggedIn');
@@ -1152,6 +1588,8 @@
             renderCertifications();
             renderSkills();
             renderInterests();
+            renderHackathons();
+            renderProjects();
         });
     </script>
 </body>
