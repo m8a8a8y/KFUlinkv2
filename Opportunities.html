@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>KFU Link - Job Opportunities</title>
+    <style>
+        :root {
+            --primary-color: #0E6C78;
+            --secondary-color: #d4a048;
+            --dark-accent: #094f5a;
+            --light-text: #ffffff;
+            --dark-text: #333333;
+            --gray-bg: #f5f5f5;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--dark-text);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: var(--gray-bg);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0E6C78;
+            padding: 10px 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 28px;
+        }
+
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .sign-out {
+            background-color: #d4a048;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .sign-out:hover {
+            background-color: #b28436;
+        }
+
+        .profile {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: gray;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .right-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .page-header {
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .page-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin: 40px 0 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+        
+        .jobs-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 30px 0;
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .jobs-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 500;
+        }
+        
+        .jobs-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        
+        .jobs-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .jobs-table tr:hover {
+            background-color: rgba(14, 108, 120, 0.03);
+        }
+        
+        .match-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .match-95 {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+        
+        .match-90 {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .match-85 {
+            background-color: #fff8e1;
+            color: #ff8f00;
+        }
+        
+        .match-80 {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+        
+        .view-btn {
+            background-color: var(--secondary-color);
+            color: var(--light-text);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        
+        .view-btn:hover {
+            background-color: #b28436;
+            transform: translateY(-1px);
+        }
+        
+        .training-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .training-card {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            text-align: left;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .training-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+        
+        .training-card h3 {
+            margin: 0 0 15px;
+            font-size: 1.3rem;
+            color: var(--light-text);
+        }
+        
+        .training-card p {
+            margin: 0 0 25px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+        
+        .apply-btn {
+            background-color: var(--secondary-color);
+            color: var(--light-text);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .apply-btn:hover {
+            background-color: #b28436;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            width: 80%;
+            max-width: 700px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: var(--dark-accent);
+        }
+
+        .job-meta {
+            margin: 15px 0;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .job-description {
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .skill-badge {
+            background-color: var(--gray-bg);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            color: var(--dark-text);
+        }
+        
+        .footer {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            padding: 40px 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            font-size: 0.9rem;
+        }
+        
+        .footer h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .footer a {
+            color: var(--light-text);
+            text-decoration: none;
+            transition: var(--transition);
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+            color: var(--secondary-color);
+        }
+        
+        .footer img {
+            height: 35px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            background-color: var(--dark-accent);
+            padding: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .footer-bottom a {
+            display: inline;
+            margin: 0 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 15px;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .training-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer {
+                grid-template-columns: 1fr;
+                padding: 30px 15px;
+                gap: 20px;
+            }
+            
+            .jobs-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .jobs-table th, 
+            .jobs-table td {
+                min-width: 120px;
+            }
+            
+            .modal-content {
+                width: 90%;
+                margin: 10% auto;
+                padding: 15px;
+            }
+        }
+
+        .nav-button {
+    background-color: #d4a048;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.nav-button:hover {
+    background-color: #b28436;
+}
+ 
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="home.html" style="text-decoration: none;">
+                <img src="headlogo.png" alt="Logo">
+            </a>
+        </div>
+        <nav>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="Progress.html" class="nav-link"><i class="fas fa-chart-line"></i> Progress</a></li>
+                <li class="nav-item"><a href="pathway.html" class="nav-link"><i class="fas fa-road"></i> Pathways</a></li>
+                <li class="nav-item"><a href="Opportunities.html" class="nav-link"><i class="fas fa-briefcase"></i> Opportunities</a></li>
+            </ul>
+        </nav>
+        <div class="right-section">
+            <button class="sign-out">Sign Out</button>
+            <div class="profile">JS</div>
+        </div>
+    </header>
+
+    <div class="content">
+        <div class="page-header">
+            <h2>Job & Training Opportunities</h2>
+            <p class="page-subtitle">Discover opportunities matched to your skills and career goals</p>
+        </div>
+
+        <h3 class="section-title">Jobs Recommended for You</h3>
+        <div class="loading" id="jobsLoading">
+            <div class="spinner"></div>
+        </div>
+        <table class="jobs-table" id="jobsTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Type</th>
+                    <th>Location</th>
+                    <th>Match</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="jobsTableBody">
+                <!-- Jobs will be loaded here dynamically -->
+            </tbody>
+        </table>
+
+        <h3 class="section-title">Training & Internship Opportunities</h3>
+        <div class="loading" id="trainingLoading">
+            <div class="spinner"></div>
+        </div>
+        <div class="training-container" id="trainingContainer" style="display: none;">
+            <!-- Training opportunities will be loaded here dynamically -->
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div>
+            <h4>Contact Us</h4>
+            <p>920002366</p>
+            <p>Email: info@kfu.edu.sa</p>
+            <p>P.O. Box: Eastern Province - AlAhsa</p>
+            <p>P.O. Box 400 - Post Code 31982</p>
+        </div>
+        <div>
+            <h4>National Address</h4>
+            <p>7057 - King Faisal University</p>
+            <p>Unit No. 1</p>
+            <p>Hofuf 3959-36362</p>
+        </div>
+        <div>
+            <h4>Important Links</h4>
+            <a href="#">Vision 2030</a>
+            <a href="#">Ministry of Education</a>
+            <a href="#">Saudi Aramco</a>
+            <a href="#">Unified National Platform GOVSA</a>
+            <a href="#">The Embassy of Saudi Arabia - Washington</a>
+            <a href="#">Digital Government Authority</a>
+        </div>
+        <div>
+            <h4>Download King Faisal University App</h4>
+            <img src="appfooter.png" alt="App Store">
+            <img src="playimage-11@2x.png" alt="Google Play">
+        </div>
+    </footer>
+
+    <div class="footer-bottom">
+        <p>All Rights Reserved for KFU © 2025 | Designed and Developed by Deanship of E-Learning and Information Technology | <a href="#">Policies</a> | <a href="#">Site Map</a></p>
+    </div>
+
+    <!-- Job Details Modal -->
+    <div id="jobModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modalJobTitle"></h2>
+            <h3 id="modalCompany"></h3>
+            <div class="job-meta">
+                <span id="modalJobType"></span> • 
+                <span id="modalLocation"></span> • 
+                <span id="modalSalary"></span>
+            </div>
+            <div class="job-description" id="modalJobDescription"></div>
+            <h3>Required Skills</h3>
+            <div class="skills-container" id="modalSkills"></div>
+            <h3>About the Company</h3>
+            <p id="modalAboutCompany"></p>
+            <button class="apply-btn" id="modalApplyBtn">Apply Now</button>
+        </div>
+    </div>
+
+            
+<!-- Profile Modal -->
+    <div id="profileModal" class="profile-modal">
+                <div class="profile-content">
+                    <div class="profile-header">
+                        <div class="profile-pic">
+                            <img src="default-profile.jpg" alt="Profile Picture" id="profileImage">
+                            <button class="edit-pic-btn">Edit</button>
+                        </div>
+                        <h2 id="profileName">Ahmad</h2>
+                        <p id="profileCollege">computer science and information systems </p>
+                    </div>
+                    
+                    <div class="profile-section">
+                        <h3>Personal Information</h3>
+                        <div class="info-item">
+                            <span>Email:</span>
+                            <span id="profileEmail">222444555@kfu.Student.edu.sa</span>
+                        </div>
+                        <div class="info-item">
+                            <span>Student ID:</span>
+                            <span id="profileId">222444555</span>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-section">
+                        <h3>Certifications</h3>
+                        <div id="profileCertifications" class="certifications-list">
+                            <p>No certifications added yet</p>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-section">
+                        <h3>Skills</h3>
+                        <div id="profileSkills" class="skills-list">
+                            <p>No skills added yet</p>
+                        </div>
+            
+        <button id="generateResume">Generate Resume</button>
+        <button class="close-profile-btn">Close</button>
+    </div>
+</div>
+
+<script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get user data from localStorage
+            const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+            const userSkills = JSON.parse(localStorage.getItem('userSkills')) || [];
+            const userPathway = localStorage.getItem('selectedPathway') || 'Software Development'; // Default if none selected
+            
+            // Set profile initials
+            if (currentUser.name) {
+                const names = currentUser.name.split(' ');
+                const initials = names[0].charAt(0) + (names.length > 1 ? names[names.length - 1].charAt(0) : '');
+                document.querySelector('.profile').textContent = initials.toUpperCase();
+            }
+            
+            // Sign out functionality
+            document.querySelector('.sign-out').addEventListener('click', function() {
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = 'login.html';
+            });
+            
+            // Function to calculate match score based on skills and pathway
+            function calculateMatchScore(jobSkills, jobPathway) {
+                // Base match based on pathway
+                let matchScore = jobPathway === userPathway ? 15 : 5;
+                
+                // Calculate skill matches
+                const matchedSkills = jobSkills.filter(skill => 
+                    userSkills.some(userSkill => 
+                        userSkill.toLowerCase() === skill.toLowerCase()
+                    )
+                ).length;
+                
+                // Add to match score (up to 85 points for skills)
+                matchScore += Math.min(85, (matchedSkills / jobSkills.length) * 85);
+                
+                // Round to nearest 5 for cleaner display
+                return Math.round(matchScore / 5) * 5;
+            }
+            
+            // Function to get job recommendations
+            async function getJobRecommendations() {
+                try {
+                    // Mock data with apply links
+                    const allJobs = {
+                        "Software Development": [
+                            {
+                                title: "Junior Software Developer",
+                                company: "TechSolutions Inc.",
+                                type: "Full-time",
+                                location: "Riyadh",
+                                salary: "12,000 - 15,000 SAR/month",
+                                description: "We're looking for a passionate Junior Software Developer to join our team. You'll work on developing and maintaining web applications using modern JavaScript frameworks.",
+                                skills: ["JavaScript", "React", "Node.js", "HTML/CSS", "Git"],
+                                about: "TechSolutions is a leading software development company in Saudi Arabia, specializing in enterprise solutions.",
+                                applyLink: "https://techsolutions.com/careers/junior-dev"
+                            },
+                            {
+                                title: "Frontend Developer Intern",
+                                company: "DigitalAraby",
+                                type: "Internship",
+                                location: "Remote",
+                                salary: "4,000 - 6,000 SAR/month",
+                                description: "6-month internship program for frontend developers. You'll work on real projects under the guidance of senior developers.",
+                                skills: ["HTML", "CSS", "JavaScript", "Responsive Design"],
+                                about: "DigitalAraby is a fast-growing digital agency focused on creating beautiful web experiences.",
+                                applyLink: "https://digitalaraby.com/internships"
+                            },
+                            {
+                                title: "Backend Developer",
+                                company: "CloudTech",
+                                type: "Full-time",
+                                location: "Jeddah",
+                                salary: "15,000 - 20,000 SAR/month",
+                                description: "Looking for a backend developer with experience in building scalable APIs and microservices.",
+                                skills: ["Node.js", "Python", "SQL", "AWS", "Docker"],
+                                about: "CloudTech provides cloud infrastructure and backend services for startups across the MENA region.",
+                                applyLink: "https://cloudtech.com/careers"
+                            }
+                        ],
+                        "Data Analytics": [
+                            {
+                                title: "Data Analyst",
+                                company: "DataInsight",
+                                type: "Full-time",
+                                location: "Khobar",
+                                salary: "10,000 - 14,000 SAR/month",
+                                description: "Analyze large datasets to extract business insights and help drive data-driven decision making.",
+                                skills: ["SQL", "Python", "Excel", "Tableau", "Statistics"],
+                                about: "DataInsight helps businesses unlock the power of their data through advanced analytics.",
+                                applyLink: "https://datainsight.com/careers"
+                            },
+                            {
+                                title: "Business Intelligence Intern",
+                                company: "Enterprise Solutions",
+                                type: "Internship",
+                                location: "Riyadh",
+                                salary: "3,500 - 5,000 SAR/month",
+                                description: "6-month internship in our BI department working with Power BI and SQL databases.",
+                                skills: ["SQL", "Power BI", "Excel", "Data Visualization"],
+                                about: "We provide enterprise software solutions to large corporations in Saudi Arabia.",
+                                applyLink: "https://enterprise-solutions.com/internships"
+                            }
+                        ],
+                        "UX/UI Design": [
+                            {
+                                title: "UI/UX Designer",
+                                company: "DesignHub",
+                                type: "Full-time",
+                                location: "Remote",
+                                salary: "11,000 - 14,000 SAR/month",
+                                description: "Create beautiful and intuitive user interfaces for web and mobile applications.",
+                                skills: ["Figma", "Adobe XD", "User Research", "Prototyping", "UI Design"],
+                                about: "DesignHub is a boutique design agency working with clients across multiple industries.",
+                                applyLink: "https://designhub.com/jobs"
+                            },
+                            {
+                                title: "UX Design Intern",
+                                company: "DigitalFirst",
+                                type: "Internship",
+                                location: "Jeddah",
+                                salary: "4,000 - 5,500 SAR/month",
+                                description: "3-month internship program to learn UX design fundamentals and work on real client projects.",
+                                skills: ["Figma", "User Research", "Wireframing"],
+                                about: "We help businesses create digital experiences that delight their customers.",
+                                applyLink: "https://digitalfirst.com/internships"
+                            }
+                        ]
+                    };
+                    
+                    // Simulate API delay
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    
+                    // Get jobs for user's pathway
+                    const pathwayJobs = allJobs[userPathway] || [];
+                    
+                    // Calculate match scores for each job
+                    const jobsWithScores = pathwayJobs.map(job => {
+                        const matchScore = calculateMatchScore(job.skills, userPathway);
+                        return {
+                            ...job,
+                            matchScore
+                        };
+                    });
+                    
+                    // Sort by match score (highest first)
+                    return jobsWithScores.sort((a, b) => b.matchScore - a.matchScore);
+                    
+                } catch (error) {
+                    console.error('Error getting job recommendations:', error);
+                    return [];
+                }
+            }
+            
+            // Function to get training/internship recommendations
+            async function getTrainingRecommendations() {
+                try {
+                    // Mock data with apply links
+                    const allTraining = {
+                        "Software Development": [
+                            {
+                                title: "Software Engineering Bootcamp",
+                                description: "12-week intensive program covering full-stack development with JavaScript, Node.js, and React.",
+                                duration: "3 months",
+                                type: "Full-time",
+                                location: "KFU Campus",
+                                skills: ["JavaScript", "HTML/CSS", "React", "Node.js"],
+                                applyLink: "https://kfu.edu.sa/bootcamps/software-engineering"
+                            },
+                            {
+                                title: "Summer Coding Internship",
+                                description: "8-week paid internship working on real projects with our development team.",
+                                duration: "2 months",
+                                type: "Internship",
+                                location: "Remote",
+                                skills: ["Python", "JavaScript", "Problem Solving"],
+                                applyLink: "https://kfu.edu.sa/internships/coding"
+                            }
+                        ],
+                        "Data Analytics": [
+                            {
+                                title: "Data Science Certification",
+                                description: "Comprehensive program covering data analysis, visualization, and machine learning fundamentals.",
+                                duration: "4 months",
+                                type: "Part-time",
+                                location: "Online",
+                                skills: ["Python", "SQL", "Pandas", "Data Visualization"],
+                                applyLink: "https://kfu.edu.sa/certifications/data-science"
+                            },
+                            {
+                                title: "Business Analytics Internship",
+                                description: "Work with our analytics team to help businesses make data-driven decisions.",
+                                duration: "3 months",
+                                type: "Internship",
+                                location: "KFU Research Park",
+                                skills: ["Excel", "SQL", "Statistics"],
+                                applyLink: "https://kfu.edu.sa/internships/analytics"
+                            }
+                        ],
+                        "UX/UI Design": [
+                            {
+                                title: "UX Design Workshop",
+                                description: "Hands-on training in user research, wireframing, and prototyping.",
+                                duration: "6 weeks",
+                                type: "Part-time",
+                                location: "KFU Design Lab",
+                                skills: ["Figma", "User Research", "Prototyping"],
+                                applyLink: "https://kfu.edu.sa/workshops/ux-design"
+                            },
+                            {
+                                title: "UI Design Internship",
+                                description: "Work with our design team to create interfaces for real client projects.",
+                                duration: "3 months",
+                                type: "Internship",
+                                location: "Hybrid",
+                                skills: ["Adobe XD", "UI Design", "Typography"],
+                                applyLink: "https://kfu.edu.sa/internships/ui-design"
+                            }
+                        ]
+                    };
+                    
+                    // Simulate API delay
+                    await new Promise(resolve => setTimeout(resolve, 1200));
+                    
+                    return allTraining[userPathway] || [];
+                    
+                } catch (error) {
+                    console.error('Error getting training recommendations:', error);
+                    return [];
+                }
+            }
+            
+            // Function to render job recommendations
+            function renderJobs(jobs) {
+                const tableBody = document.getElementById('jobsTableBody');
+                tableBody.innerHTML = '';
+                
+                if (jobs.length === 0) {
+                    document.getElementById('jobsLoading').innerHTML = 
+                        '<p>No job recommendations found based on your profile. Try expanding your skills.</p>';
+                    return;
+                }
+                
+                jobs.forEach(job => {
+                    const row = document.createElement('tr');
+                    
+                    // Determine match badge class based on score
+                    let badgeClass = 'match-80';
+                    if (job.matchScore >= 95) badgeClass = 'match-95';
+                    else if (job.matchScore >= 90) badgeClass = 'match-90';
+                    else if (job.matchScore >= 85) badgeClass = 'match-85';
+                    
+                    row.innerHTML = `
+                        <td>${job.title}</td>
+                        <td>${job.company}</td>
+                        <td>${job.type}</td>
+                        <td>${job.location}</td>
+                        <td><span class="match-badge ${badgeClass}">${job.matchScore}% Match</span></td>
+                        <td><button class="view-btn" data-job='${JSON.stringify(job)}'>View Details</button></td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+                
+                // Add event listeners to view buttons
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const jobData = JSON.parse(this.getAttribute('data-job'));
+                        showJobDetails(jobData);
+                    });
+                });
+                
+                // Show the table
+                document.getElementById('jobsLoading').style.display = 'none';
+                document.getElementById('jobsTable').style.display = 'table';
+            }
+            
+            // Function to render training recommendations
+            function renderTraining(opportunities) {
+                const container = document.getElementById('trainingContainer');
+                container.innerHTML = '';
+                
+                if (opportunities.length === 0) {
+                    document.getElementById('trainingLoading').innerHTML = 
+                        '<p>No training opportunities found based on your pathway.</p>';
+                    return;
+                }
+                
+                opportunities.forEach(opp => {
+                    const card = document.createElement('div');
+                    card.className = 'training-card';
+                    card.innerHTML = `
+                        <h3>${opp.title}</h3>
+                        <p>${opp.description}</p>
+                        <div style="margin-bottom: 15px; font-size: 0.9rem;">
+                            <strong>Duration:</strong> ${opp.duration} • 
+                            <strong>Type:</strong> ${opp.type} • 
+                            <strong>Location:</strong> ${opp.location}
+                        </div>
+                        <button class="apply-btn" data-link="${opp.applyLink}">Apply Now</button>
+                    `;
+                    container.appendChild(card);
+                });
+                
+                // Add event listeners to Apply Now buttons
+                document.querySelectorAll('.training-card .apply-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const applyLink = this.getAttribute('data-link');
+                        window.open(applyLink, '_blank');
+                    });
+                });
+                
+                // Show the container
+                document.getElementById('trainingLoading').style.display = 'none';
+                container.style.display = 'grid';
+            }
+            
+            // Function to show job details in modal
+            function showJobDetails(job) {
+                const modal = document.getElementById('jobModal');
+                document.getElementById('modalJobTitle').textContent = job.title;
+                document.getElementById('modalCompany').textContent = job.company;
+                document.getElementById('modalJobType').textContent = job.type;
+                document.getElementById('modalLocation').textContent = job.location;
+                document.getElementById('modalSalary').textContent = job.salary;
+                document.getElementById('modalJobDescription').textContent = job.description;
+                document.getElementById('modalAboutCompany').textContent = job.about;
+                
+                // Set up the Apply Now button with job-specific link
+                const applyBtn = document.getElementById('modalApplyBtn');
+                applyBtn.onclick = function() {
+                    window.open(job.applyLink, '_blank');
+                };
+                
+                // Render skills
+                const skillsContainer = document.getElementById('modalSkills');
+                skillsContainer.innerHTML = '';
+                job.skills.forEach(skill => {
+                    const skillSpan = document.createElement('span');
+                    skillSpan.className = 'skill-badge';
+                    skillSpan.textContent = skill;
+                    skillsContainer.appendChild(skillSpan);
+                });
+                
+                modal.style.display = 'block';
+                
+                // Close modal when clicking X
+                document.querySelector('.close-modal').addEventListener('click', function() {
+                    modal.style.display = 'none';
+                });
+                
+                // Close modal when clicking outside
+                window.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Initialize the page
+            async function init() {
+                // Load job recommendations
+                const jobs = await getJobRecommendations();
+                renderJobs(jobs);
+                
+                // Load training recommendations
+                const training = await getTrainingRecommendations();
+                renderTraining(training);
+            }
+            
+            init();
+        });
+    </script>
+</body>
+</html>

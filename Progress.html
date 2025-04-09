@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KFU Link - Student Progress</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #0E6C78;
+            --secondary-color: #d4a048;
+            --dark-accent: #094f5a;
+            --light-text: #ffffff;
+            --dark-text: #333333;
+            --gray-bg: #f5f5f5;
+            --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--dark-text);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: var(--gray-bg);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0E6C78;
+            padding: 10px 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .sign-out {
+            background-color: #d4a048;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .sign-out:hover {
+            background-color: #b28436;
+        }
+
+        .profile {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: gray;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        main {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .dashboard-section {
+            margin: 30px 0;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--secondary-color);
+            display: inline-block;
+        }
+        
+        .list-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            margin-top: 20px;
+        }
+        
+        .list-section ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .list-section li {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .list-section li:last-child {
+            border-bottom: none;
+        }
+        
+        .btn {
+            background-color: var(--secondary-color);
+            color: var(--light-text);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+        
+        .btn:hover {
+            background-color: #b28436;
+        }
+        
+        .btn-danger {
+            background-color: #d32f2f;
+        }
+        
+        .btn-danger:hover {
+            background-color: #b71c1c;
+        }
+
+        .btn-add {
+            background-color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .btn-add:hover {
+            background-color: var(--dark-accent);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: var(--dark-text);
+        }
+
+        .modal-title {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .tag {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .tag-remove {
+            margin-left: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .tag-input-container {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .tag-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .add-tag-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .skill-options {
+            margin-top: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px;
+        }
+        
+        .option-item {
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .option-item:hover {
+            background-color: rgba(14, 108, 120, 0.1);
+        }
+        
+        .option-item.selected {
+            background-color: rgba(14, 108, 120, 0.2);
+        }
+        
+        .footer {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            padding: 40px 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            font-size: 0.9rem;
+        }
+        
+        .footer h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .footer a {
+            color: var(--light-text);
+            text-decoration: none;
+            transition: var(--transition);
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+            color: var(--secondary-color);
+        }
+        
+        .footer img {
+            height: 35px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            background-color: var(--dark-accent);
+            padding: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .footer-bottom a {
+            display: inline;
+            margin: 0 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 15px;
+            }
+            
+            main {
+                padding: 20px 15px;
+            }
+            
+            .footer {
+                grid-template-columns: 1fr;
+                padding: 30px 15px;
+                gap: 20px;
+            }
+
+            .modal-content {
+                margin: 20% auto;
+                width: 95%;
+            }
+        }
+
+        .nav-button {
+    background-color: #d4a048;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.nav-button:hover {
+    background-color: #b28436;
+}
+
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="home.html" style="text-decoration: none;">
+                <img src="headlogo.png" alt="Logo">
+            </a>
+        </div>
+        <nav>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="Progress.html" class="nav-link"><i class="fas fa-chart-line"></i> Progress</a></li>
+                <li class="nav-item"><a href="pathway.html" class="nav-link"><i class="fas fa-road"></i> Pathways</a></li>
+                <li class="nav-item"><a href="Opportunities.html" class="nav-link"><i class="fas fa-briefcase"></i> Opportunities</a></li>
+            </ul>
+        </nav>
+        <div class="right-section">
+            <button class="sign-out">Sign Out</button>
+            <div class="profile">JS</div>
+        </div>
+    </header>
+    
+    <main>
+        <h2>Your Progress Dashboard</h2>
+        <p class="subtitle">Manage your certifications, skills, and interests</p>
+        
+        <section class="dashboard-section">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 class="section-title">Your Certifications</h3>
+                <button id="addCertificationBtn" class="btn btn-add">+ Add Certification</button>
+            </div>
+            <div class="list-section">
+                <ul id="certificationsList">
+                    <!-- Certifications will be added here dynamically -->
+                </ul>
+            </div>
+        </section>
+        
+        <section class="dashboard-section">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 class="section-title">Your Skills</h3>
+                <button id="addSkillBtn" class="btn btn-add">+ Add Skill</button>
+            </div>
+            <div class="list-section">
+                <ul id="skillsList">
+                    <!-- Skills will be added here dynamically -->
+                </ul>
+            </div>
+        </section>
+        
+        <section class="dashboard-section">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 class="section-title">Your Interests & Favorite Courses</h3>
+                <button id="addInterestBtn" class="btn btn-add">+ Add Interest/Course</button>
+            </div>
+            <div class="list-section">
+                <ul id="interestsList">
+                    <!-- Interests and courses will be added here dynamically -->
+                </ul>
+            </div>
+        </section>
+    </main>
+
+  
+    <div id="certificationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 class="modal-title">Add New Certification</h3>
+            <form id="certificationForm">
+                <div class="form-group">
+                    <label for="certificationName">Certification Name</label>
+                    <input type="text" id="certificationName" class="form-control" placeholder="Enter certification name" required>
+                </div>
+                <div class="form-group">
+                    <label for="issuingOrganization">Issuing Organization</label>
+                    <input type="text" id="issuingOrganization" class="form-control" placeholder="Enter organization name" required>
+                </div>
+                <div class="form-group">
+                    <label for="certificationDate">Date Obtained</label>
+                    <input type="date" id="certificationDate" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Related Skills</label>
+                    <div class="tags-container" id="certification-skills-tags"></div>
+                    <div class="tag-input-container">
+                        <input type="text" id="certification-skill-input" class="tag-input" placeholder="Add a related skill">
+                        <button type="button" id="add-certification-skill-btn" class="add-tag-btn">Add</button>
+                    </div>
+                    <div class="skill-options">
+                        <div class="option-item" data-value="programming">Programming</div>
+                        <div class="option-item" data-value="web-development">Web Development</div>
+                        <div class="option-item" data-value="mobile-development">Mobile Development</div>
+                        <div class="option-item" data-value="data-analysis">Data Analysis</div>
+                        <div class="option-item" data-value="machine-learning">Machine Learning</div>
+                        <div class="option-item" data-value="graphic-design">Graphic Design</div>
+                        <div class="option-item" data-value="ui-ux-design">UI/UX Design</div>
+                        <div class="option-item" data-value="project-management">Project Management</div>
+                        <div class="option-item" data-value="digital-marketing">Digital Marketing</div>
+                    </div>
+                    <input type="hidden" id="certificationSkills" name="certificationSkills">
+                </div>
+                <button type="submit" class="btn">Add Certification</button>
+            </form>
+        </div>
+    </div>
+
+    
+    <div id="skillModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 class="modal-title">Add New Skill</h3>
+            <div class="form-group">
+                <label>Skill Name</label>
+                <div class="tags-container" id="skills-tags"></div>
+                <div class="tag-input-container">
+                    <input type="text" id="skill-input" class="tag-input" placeholder="Enter a skill">
+                    <button type="button" id="add-skill-btn" class="add-tag-btn">Add</button>
+                </div>
+                <div class="skill-options">
+                    <div class="option-item" data-value="programming">Programming</div>
+                    <div class="option-item" data-value="web-development">Web Development</div>
+                    <div class="option-item" data-value="mobile-development">Mobile Development</div>
+                    <div class="option-item" data-value="data-analysis">Data Analysis</div>
+                    <div class="option-item" data-value="machine-learning">Machine Learning</div>
+                    <div class="option-item" data-value="graphic-design">Graphic Design</div>
+                    <div class="option-item" data-value="ui-ux-design">UI/UX Design</div>
+                    <div class="option-item" data-value="project-management">Project Management</div>
+                    <div class="option-item" data-value="digital-marketing">Digital Marketing</div>
+                    <div class="option-item" data-value="content-writing">Content Writing</div>
+                    <div class="option-item" data-value="public-speaking">Public Speaking</div>
+                    <div class="option-item" data-value="leadership">Leadership</div>
+                    <div class="option-item" data-value="teamwork">Teamwork</div>
+                    <div class="option-item" data-value="problem-solving">Problem Solving</div>
+                    <div class="option-item" data-value="critical-thinking">Critical Thinking</div>
+                </div>
+                <input type="hidden" id="skills" name="skills">
+            </div>
+            <button id="saveSkillsBtn" class="btn">Save Skills</button>
+        </div>
+    </div>
+    
+    <div id="interestModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 class="modal-title">Add Interests & Favorite Courses</h3>
+            <div class="form-group">
+                <label>Interests & Courses</label>
+                <div class="tags-container" id="interests-tags"></div>
+                <div class="tag-input-container">
+                    <input type="text" id="interest-input" class="tag-input" placeholder="Enter an interest or course">
+                    <button type="button" id="add-interest-btn" class="add-tag-btn">Add</button>
+                </div>
+                <div class="skill-options">
+                    <div class="option-item" data-value="Artificial Intelligence">Artificial Intelligence</div>
+                    <div class="option-item" data-value="Machine Learning">Machine Learning</div>
+                    <div class="option-item" data-value="Data Science">Data Science</div>
+                    <div class="option-item" data-value="Web Development">Web Development</div>
+                    <div class="option-item" data-value="Mobile Development">Mobile Development</div>
+                    <div class="option-item" data-value="Cybersecurity">Cybersecurity</div>
+                    <div class="option-item" data-value="Cloud Computing">Cloud Computing</div>
+                    <div class="option-item" data-value="Database Systems">Database Systems</div>
+                    <div class="option-item" data-value="Software Engineering">Software Engineering</div>
+                    <div class="option-item" data-value="Human-Computer Interaction">Human-Computer Interaction</div>
+                    <div class="option-item" data-value="Computer Networks">Computer Networks</div>
+                    <div class="option-item" data-value="Operating Systems">Operating Systems</div>
+                    <div class="option-item" data-value="Algorithms">Algorithms</div>
+                    <div class="option-item" data-value="Data Structures">Data Structures</div>
+                    <div class="option-item" data-value="Computer Graphics">Computer Graphics</div>
+                </div>
+                <input type="hidden" id="interests" name="interests">
+            </div>
+            <button id="saveInterestsBtn" class="btn">Save Interests</button>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div>
+            <h4>Contact Us</h4>
+            <p>920002366</p>
+            <p>Email: info@kfu.edu.sa</p>
+            <p>P.O. Box: Eastern Province - AlAhsa</p>
+            <p>P.O. Box 400 - Post Code 31982</p>
+        </div>
+        <div>
+            <h4>National Address</h4>
+            <p>7057 - King Faisal University</p>
+            <p>Unit No. 1</p>
+            <p>Hofuf 3959-36362</p>
+        </div>
+        <div>
+            <h4>Important Links</h4>
+            <a href="#">Vision 2030</a>
+            <a href="#">Ministry of Education</a>
+            <a href="#">Saudi Aramco</a>
+            <a href="#">Unified National Platform GOVSA</a>
+            <a href="#">The Embassy of Saudi Arabia - Washington</a>
+            <a href="#">Digital Government Authority</a>
+        </div>
+        <div>
+            <h4>Download King Faisal University App</h4>
+            <img src="appfooter.png" alt="App Store">
+            <img src="playimage-11@2x.png" alt="Google Play">
+        </div>
+    </footer>
+    <div class="footer-bottom">
+        <p>All Rights Reserved for KFU © 2025 | Designed and Developed by Deanship of E-Learning and Information Technology | <a href="#">Policies</a> | <a href="#">Site Map</a></p>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="profile-modal">
+        <div class="profile-content">
+            <div class="profile-header">
+                <div class="profile-pic">
+                    <img src="default-profile.jpg" alt="Profile Picture" id="profileImage">
+                    <button class="edit-pic-btn">Edit</button>
+                </div>
+                <h2 id="profileName">Ahmad</h2>
+                <p id="profileCollege">computer science and information systems </p>
+            </div>
+            
+            <div class="profile-section">
+                <h3>Personal Information</h3>
+                <div class="info-item">
+                    <span>Email:</span>
+                    <span id="profileEmail">222444555@kfu.Student.edu.sa</span>
+                </div>
+                <div class="info-item">
+                    <span>Student ID:</span>
+                    <span id="profileId">222444555</span>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <h3>Certifications</h3>
+                <div id="profileCertifications" class="certifications-list">
+                    <p>No certifications added yet</p>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <h3>Skills</h3>
+                <div id="profileSkills" class="skills-list">
+                    <p>No skills added yet</p>
+                </div>
+    
+<button id="generateResume">Generate Resume</button>
+<button class="close-profile-btn">Close</button>
+</div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+           // Check if user is logged in
+          /*  if (!localStorage.getItem('userLoggedIn')) {
+                window.location.href = 'login.html';
+                return;
+            } */
+
+            // Get current user data
+            const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+            
+            // Initialize certifications and skills
+            let certifications = JSON.parse(localStorage.getItem('certifications')) || [];
+            let skills = [];
+            
+            // Get skills from registration if they exist
+            if (currentUser.skills) {
+                skills = currentUser.skills;
+            } else {
+                // Fallback to separate skills storage if userData doesn't exist
+                skills = JSON.parse(localStorage.getItem('userSkills')) || [];
+            }
+            
+            // Initialize currentSkills with the registered skills
+            let currentSkills = [...skills];
+            
+            // Initialize interests
+            let interests = JSON.parse(localStorage.getItem('userInterests')) || [];
+            let currentInterests = [...interests];
+            
+            // DOM elements
+            const certificationsList = document.getElementById('certificationsList');
+            const skillsList = document.getElementById('skillsList');
+            const interestsList = document.getElementById('interestsList');
+            
+            // Modal elements
+            const certificationModal = document.getElementById('certificationModal');
+            const skillModal = document.getElementById('skillModal');
+            const interestModal = document.getElementById('interestModal');
+            const addCertificationBtn = document.getElementById('addCertificationBtn');
+            const addSkillBtn = document.getElementById('addSkillBtn');
+            const addInterestBtn = document.getElementById('addInterestBtn');
+            const closeButtons = document.querySelectorAll('.close');
+            
+            // Certification form elements
+            const certificationForm = document.getElementById('certificationForm');
+            const certificationNameInput = document.getElementById('certificationName');
+            const issuingOrgInput = document.getElementById('issuingOrganization');
+            const certificationDateInput = document.getElementById('certificationDate');
+            
+            // Certification skills elements
+            const certificationSkillsTags = document.getElementById('certification-skills-tags');
+            const certificationSkillInput = document.getElementById('certification-skill-input');
+            const addCertificationSkillBtn = document.getElementById('add-certification-skill-btn');
+            const certificationSkillsHidden = document.getElementById('certificationSkills');
+            const certificationSkillOptions = document.querySelectorAll('#certificationForm .skill-options .option-item');
+            
+            // General skills elements
+            const skillsTags = document.getElementById('skills-tags');
+            const skillInput = document.getElementById('skill-input');
+            const addSkillBtnModal = document.getElementById('add-skill-btn');
+            const saveSkillsBtn = document.getElementById('saveSkillsBtn');
+            const skillsHidden = document.getElementById('skills');
+            const skillOptions = document.querySelectorAll('#skillModal .skill-options .option-item');
+            
+            // Interests elements
+            const interestsTags = document.getElementById('interests-tags');
+            const interestInput = document.getElementById('interest-input');
+            const addInterestBtnModal = document.getElementById('add-interest-btn');
+            const saveInterestsBtn = document.getElementById('saveInterestsBtn');
+            const interestsHidden = document.getElementById('interests');
+            const interestOptions = document.querySelectorAll('#interestModal .skill-options .option-item');
+            
+            let currentCertificationSkills = [];
+            let tempSkills = [...currentSkills]; // Temporary storage for skills being added in modal
+            let tempInterests = [...currentInterests]; // Temporary storage for interests being added in modal
+
+            // Modal open/close functions
+            function openModal(modal) {
+                modal.style.display = 'block';
+            }
+
+            function closeModal(modal) {
+                modal.style.display = 'none';
+            }
+
+            // Event listeners for modals
+            addCertificationBtn.addEventListener('click', () => {
+                currentCertificationSkills = [];
+                updateCertificationSkillsDisplay();
+                certificationForm.reset();
+                openModal(certificationModal);
+            });
+
+            addSkillBtn.addEventListener('click', () => {
+                tempSkills = [...currentSkills];
+                updateSkillsDisplay();
+                openModal(skillModal);
+            });
+
+            addInterestBtn.addEventListener('click', () => {
+                tempInterests = [...currentInterests];
+                updateInterestsDisplay();
+                openModal(interestModal);
+            });
+
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const modal = this.closest('.modal');
+                    closeModal(modal);
+                });
+            });
+
+            window.addEventListener('click', (event) => {
+                if (event.target === certificationModal) {
+                    closeModal(certificationModal);
+                }
+                if (event.target === skillModal) {
+                    closeModal(skillModal);
+                }
+                if (event.target === interestModal) {
+                    closeModal(interestModal);
+                }
+            });
+
+            // Render certifications, skills, and interests
+            function renderCertifications() {
+                certificationsList.innerHTML = '';
+                
+                if (certifications.length === 0) {
+                    certificationsList.innerHTML = '<li>No certifications added yet</li>';
+                    return;
+                }
+                
+                certifications.forEach((cert, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <div>
+                            <strong>${cert.name}</strong> - ${cert.organization}<br>
+                            <small>Date: ${cert.date}</small><br>
+                            <small>Skills: ${cert.skills.join(', ')}</small>
+                        </div>
+                        <button class="btn btn-danger" data-index="${index}">Remove</button>
+                    `;
+                    certificationsList.appendChild(li);
+                });
+                
+                // Add event listeners to remove buttons
+                document.querySelectorAll('#certificationsList .btn-danger').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        removeCertification(index);
+                    });
+                });
+            }
+            
+            function renderSkills() {
+                skillsList.innerHTML = '';
+                
+                if (currentSkills.length === 0) {
+                    skillsList.innerHTML = '<li>No skills added yet</li>';
+                    return;
+                }
+                
+                currentSkills.forEach((skill, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${skill}</span>
+                        <button class="btn btn-danger" data-index="${index}">Remove</button>
+                    `;
+                    skillsList.appendChild(li);
+                });
+                
+                // Add event listeners to remove buttons
+                document.querySelectorAll('#skillsList .btn-danger').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        removeSkill(index);
+                    });
+                });
+            }
+            
+            function renderInterests() {
+                interestsList.innerHTML = '';
+                
+                if (currentInterests.length === 0) {
+                    interestsList.innerHTML = '<li>No interests/courses added yet</li>';
+                    return;
+                }
+                
+                currentInterests.forEach((interest, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${interest}</span>
+                        <button class="btn btn-danger" data-index="${index}">Remove</button>
+                    `;
+                    interestsList.appendChild(li);
+                });
+                
+                // Add event listeners to remove buttons
+                document.querySelectorAll('#interestsList .btn-danger').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        removeInterest(index);
+                    });
+                });
+            }
+            
+            // Certification functions
+            function addCertification(name, organization, date, skills) {
+                certifications.push({
+                    name,
+                    organization,
+                    date,
+                    skills
+                });
+                
+                localStorage.setItem('certifications', JSON.stringify(certifications));
+                renderCertifications();
+                
+                // Add skills from certification to general skills if they don't exist
+                skills.forEach(skill => {
+                    if (!currentSkills.includes(skill)) {
+                        currentSkills.push(skill);
+                    }
+                });
+                
+                localStorage.setItem('userSkills', JSON.stringify(currentSkills));
+                renderSkills();
+                
+                // Clear form and close modal
+                certificationForm.reset();
+                currentCertificationSkills = [];
+                updateCertificationSkillsDisplay();
+                closeModal(certificationModal);
+            }
+            
+            function removeCertification(index) {
+                certifications.splice(index, 1);
+                localStorage.setItem('certifications', JSON.stringify(certifications));
+                renderCertifications();
+            }
+            
+            // Skill functions
+            function addSkillToTemp(skill) {
+                if (!tempSkills.includes(skill)) {
+                    tempSkills.push(skill);
+                    updateSkillsDisplay();
+                }
+            }
+
+            function removeSkillFromTemp(skill) {
+                tempSkills = tempSkills.filter(s => s !== skill);
+                updateSkillsDisplay();
+            }
+
+            function saveSkills() {
+                currentSkills = [...tempSkills];
+                localStorage.setItem('userSkills', JSON.stringify(currentSkills));
+                renderSkills();
+                closeModal(skillModal);
+            }
+            
+            function removeSkill(index) {
+                currentSkills.splice(index, 1);
+                localStorage.setItem('userSkills', JSON.stringify(currentSkills));
+                renderSkills();
+            }
+            
+            // Interest functions
+            function addInterestToTemp(interest) {
+                if (!tempInterests.includes(interest)) {
+                    tempInterests.push(interest);
+                    updateInterestsDisplay();
+                }
+            }
+
+            function removeInterestFromTemp(interest) {
+                tempInterests = tempInterests.filter(i => i !== interest);
+                updateInterestsDisplay();
+            }
+
+            function saveInterests() {
+                currentInterests = [...tempInterests];
+                localStorage.setItem('userInterests', JSON.stringify(currentInterests));
+                renderInterests();
+                closeModal(interestModal);
+            }
+            
+            function removeInterest(index) {
+                currentInterests.splice(index, 1);
+                localStorage.setItem('userInterests', JSON.stringify(currentInterests));
+                renderInterests();
+            }
+            
+            // Certification skills management
+            function addCertificationSkill() {
+                const skill = certificationSkillInput.value.trim();
+                if (skill && !currentCertificationSkills.includes(skill)) {
+                    currentCertificationSkills.push(skill);
+                    updateCertificationSkillsDisplay();
+                    certificationSkillInput.value = '';
+                }
+            }
+            
+            function removeCertificationSkill(skill) {
+                currentCertificationSkills = currentCertificationSkills.filter(s => s !== skill);
+                updateCertificationSkillsDisplay();
+            }
+            
+            function updateCertificationSkillsDisplay() {
+                certificationSkillsTags.innerHTML = '';
+                currentCertificationSkills.forEach(skill => {
+                    const tag = document.createElement('div');
+                    tag.className = 'tag';
+                    tag.innerHTML = `
+                        ${skill}
+                        <span class="tag-remove" data-skill="${skill}">×</span>
+                    `;
+                    certificationSkillsTags.appendChild(tag);
+                });
+                
+                certificationSkillsHidden.value = JSON.stringify(currentCertificationSkills);
+                
+                certificationSkillOptions.forEach(option => {
+                    if (currentCertificationSkills.includes(option.dataset.value)) {
+                        option.classList.add('selected');
+                    } else {
+                        option.classList.remove('selected');
+                    }
+                });
+            }
+
+            // Skills management in modal
+            function updateSkillsDisplay() {
+                skillsTags.innerHTML = '';
+                tempSkills.forEach(skill => {
+                    const tag = document.createElement('div');
+                    tag.className = 'tag';
+                    tag.innerHTML = `
+                        ${skill}
+                        <span class="tag-remove" data-skill="${skill}">×</span>
+                    `;
+                    skillsTags.appendChild(tag);
+                });
+                
+                skillsHidden.value = JSON.stringify(tempSkills);
+                
+                skillOptions.forEach(option => {
+                    if (tempSkills.includes(option.dataset.value)) {
+                        option.classList.add('selected');
+                    } else {
+                        option.classList.remove('selected');
+                    }
+                });
+            }
+            
+            // Interests management in modal
+            function updateInterestsDisplay() {
+                interestsTags.innerHTML = '';
+                tempInterests.forEach(interest => {
+                    const tag = document.createElement('div');
+                    tag.className = 'tag';
+                    tag.innerHTML = `
+                        ${interest}
+                        <span class="tag-remove" data-interest="${interest}">×</span>
+                    `;
+                    interestsTags.appendChild(tag);
+                });
+                
+                interestsHidden.value = JSON.stringify(tempInterests);
+                
+                interestOptions.forEach(option => {
+                    if (tempInterests.includes(option.dataset.value)) {
+                        option.classList.add('selected');
+                    } else {
+                        option.classList.remove('selected');
+                    }
+                });
+            }
+            
+            function addGeneralSkill() {
+                const skill = skillInput.value.trim();
+                if (skill) {
+                    addSkillToTemp(skill);
+                    skillInput.value = '';
+                }
+            }
+            
+            function addGeneralInterest() {
+                const interest = interestInput.value.trim();
+                if (interest) {
+                    addInterestToTemp(interest);
+                    interestInput.value = '';
+                }
+            }
+            
+            // Event listeners
+            certificationForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = certificationNameInput.value.trim();
+                const organization = issuingOrgInput.value.trim();
+                const date = certificationDateInput.value;
+                
+                if (name && organization && date && currentCertificationSkills.length > 0) {
+                    addCertification(name, organization, date, currentCertificationSkills);
+                } else {
+                    alert('Please fill all fields and add at least one skill');
+                }
+            });
+            
+            addCertificationSkillBtn.addEventListener('click', addCertificationSkill);
+            certificationSkillInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addCertificationSkill();
+                }
+            });
+            
+            certificationSkillsTags.addEventListener('click', function(e) {
+                if (e.target.classList.contains('tag-remove')) {
+                    const skill = e.target.dataset.skill;
+                    removeCertificationSkill(skill);
+                }
+            });
+            
+            certificationSkillOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const skill = this.dataset.value;
+                    if (currentCertificationSkills.includes(skill)) {
+                        removeCertificationSkill(skill);
+                    } else {
+                        if (!currentCertificationSkills.includes(skill)) {
+                            currentCertificationSkills.push(skill);
+                            updateCertificationSkillsDisplay();
+                        }
+                    }
+                });
+            });
+            
+            addSkillBtnModal.addEventListener('click', addGeneralSkill);
+            skillInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addGeneralSkill();
+                }
+            });
+
+            skillsTags.addEventListener('click', function(e) {
+                if (e.target.classList.contains('tag-remove')) {
+                    const skill = e.target.dataset.skill;
+                    removeSkillFromTemp(skill);
+                }
+            });
+
+            skillOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const skill = this.dataset.value;
+                    if (tempSkills.includes(skill)) {
+                        removeSkillFromTemp(skill);
+                    } else {
+                        addSkillToTemp(skill);
+                    }
+                });
+            });
+
+            saveSkillsBtn.addEventListener('click', saveSkills);
+            
+            addInterestBtnModal.addEventListener('click', addGeneralInterest);
+            interestInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addGeneralInterest();
+                }
+            });
+
+            interestsTags.addEventListener('click', function(e) {
+                if (e.target.classList.contains('tag-remove')) {
+                    const interest = e.target.dataset.interest;
+                    removeInterestFromTemp(interest);
+                }
+            });
+
+            interestOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const interest = this.dataset.value;
+                    if (tempInterests.includes(interest)) {
+                        removeInterestFromTemp(interest);
+                    } else {
+                        addInterestToTemp(interest);
+                    }
+                });
+            });
+
+            saveInterestsBtn.addEventListener('click', saveInterests);
+            
+            // Sign out functionality
+            document.querySelector('.sign-out').addEventListener('click', function() {
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = 'login.html';
+            });
+            
+            // Set profile initials
+            if (currentUser.name) {
+                const names = currentUser.name.split(' ');
+                const initials = names[0].charAt(0) + (names.length > 1 ? names[names.length - 1].charAt(0) : '');
+                document.querySelector('.profile').textContent = initials.toUpperCase();
+            }
+            
+            // Initial render
+            renderCertifications();
+            renderSkills();
+            renderInterests();
+        });
+    </script>
+</body>
+</html>

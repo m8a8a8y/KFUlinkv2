@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>KFU Link - Register</title>
+    <style>
+        :root {
+            --primary-color: #0E6C78;
+            --secondary-color: #d4a048;
+            --light-text: #ffffff;
+            --dark-text: #333333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--dark-text);
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0E6C78;
+            padding: 10px 20px;
+        }
+        
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        
+        .main-content {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .page-header h2 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .highlight {
+            color: var(--secondary-color);
+        }
+        
+        .page-subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        select.form-control {
+            height: 40px;
+        }
+        
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 8px 0;
+        }
+        
+        .tag {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .tag-remove {
+            margin-left: 6px;
+            cursor: pointer;
+        }
+        
+        .tag-input-container {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .tag-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .add-tag-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .skill-options, .interest-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .option-item {
+            background-color: #f0f0f0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .option-item.selected {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .form-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .footer h4 {
+            margin-top: 0;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .footer-bottom {
+            background-color: #094f5a;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+        }
+        
+        .footer-bottom a {
+            color: var(--secondary-color);
+            display: inline;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="home.html" class="logo">
+            <img src="headlogo.png" alt="KFU Link Logo">
+        </a>
+    </header>
+    
+    <main class="main-content">
+        <div class="page-header">
+            <h2>Create Your <span class="highlight">KFU Link</span> Account</h2>
+            <p class="page-subtitle">Join to access personalized career pathways and opportunities</p>
+        </div>
+        
+        <div class="form-container">
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" class="form-control" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="college">College</label>
+                    <select id="college" class="form-control" required>
+                        <option value="">Select your college</option>
+                        <option value="computer">Computer Science and Information Technology</option>
+                        <option value="engineering">Engineering</option>
+                        <option value="business">Business Administration</option>
+                        <option value="medicine">Medicine</option>
+                        <option value="science">Science</option>
+                        <option value="arts">Arts</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">KFU Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="Enter your KFU email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Skills</label>
+                    <div class="tags-container" id="skills-tags"></div>
+                    <div class="tag-input-container">
+                        <input type="text" id="skill-input" class="tag-input" placeholder="Add a skill">
+                        <button type="button" id="add-skill-btn" class="add-tag-btn">Add</button>
+                    </div>
+                    <div class="skill-options">
+                        <div class="option-item" data-value="programming">Programming</div>
+                        <div class="option-item" data-value="web-development">Web Development</div>
+                        <div class="option-item" data-value="mobile-development">Mobile Development</div>
+                        <div class="option-item" data-value="data-analysis">Data Analysis</div>
+                        <div class="option-item" data-value="machine-learning">Machine Learning</div>
+                        <div class="option-item" data-value="graphic-design">Graphic Design</div>
+                        <div class="option-item" data-value="ui-ux-design">UI/UX Design</div>
+                        <div class="option-item" data-value="project-management">Project Management</div>
+                        <div class="option-item" data-value="digital-marketing">Digital Marketing</div>
+                        <div class="option-item" data-value="content-writing">Content Writing</div>
+                        <div class="option-item" data-value="public-speaking">Public Speaking</div>
+                        <div class="option-item" data-value="leadership">Leadership</div>
+                        <div class="option-item" data-value="teamwork">Teamwork</div>
+                        <div class="option-item" data-value="problem-solving">Problem Solving</div>
+                        <div class="option-item" data-value="critical-thinking">Critical Thinking</div>
+                    </div>
+                    <input type="hidden" id="skills" name="skills">
+                </div>
+                
+                <div class="form-group">
+                    <label>Career Interests</label>
+                    <div class="tags-container" id="interests-tags"></div>
+                    <div class="tag-input-container">
+                        <input type="text" id="interest-input" class="tag-input" placeholder="Add a career interest">
+                        <button type="button" id="add-interest-btn" class="add-tag-btn">Add</button>
+                    </div>
+                    <div class="interest-options">
+                        <div class="option-item" data-value="software-development">Software Development</div>
+                        <div class="option-item" data-value="data-science">Data Science</div>
+                        <div class="option-item" data-value="ai-engineering">AI Engineering</div>
+                        <div class="option-item" data-value="cybersecurity">Cybersecurity</div>
+                        <div class="option-item" data-value="cloud-computing">Cloud Computing</div>
+                        <div class="option-item" data-value="ui-ux-design">UI/UX Design</div>
+                        <div class="option-item" data-value="graphic-design">Graphic Design</div>
+                        <div class="option-item" data-value="digital-marketing">Digital Marketing</div>
+                        <div class="option-item" data-value="business-analysis">Business Analysis</div>
+                        <div class="option-item" data-value="project-management">Project Management</div>
+                        <div class="option-item" data-value="product-management">Product Management</div>
+                        <div class="option-item" data-value="academic-research">Academic Research</div>
+                        <div class="option-item" data-value="teaching-education">Teaching/Education</div>
+                        <div class="option-item" data-value="healthcare">Healthcare</div>
+                        <div class="option-item" data-value="engineering">Engineering</div>
+                    </div>
+                    <input type="hidden" id="interests" name="interests">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Create a password" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" class="form-control" placeholder="Confirm your password" required>
+                </div>
+                
+                <button type="submit" class="btn">Create Account</button>
+                
+                <div class="form-footer">
+                    <p>Already have an account? <a href="login.html">Sign in here</a></p>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div>
+            <h4>Contact Us</h4>
+            <p>920002366</p>
+            <p>Email: info@kfu.edu.sa</p>
+            <p>P.O. Box: Eastern Province - AlAhsa</p>
+            <p>P.O. Box 400 - Post Code 31982</p>
+        </div>
+        <div>
+            <h4>National Address</h4>
+            <p>7057 - King Faisal University</p>
+            <p>Unit No. 1</p>
+            <p>Hofuf 3959-36362</p>
+        </div>
+        <div>
+            <h4>Important Links</h4>
+            <a href="#">Vision 2030</a>
+            <a href="#">Ministry of Education</a>
+            <a href="#">Saudi Aramco</a>
+            <a href="#">Unified National Platform GOVSA</a>
+            <a href="#">The Embassy of Saudi Arabia - Washington</a>
+            <a href="#">Digital Government Authority</a>
+        </div>
+        <div>
+            <h4>Download King Faisal University App</h4>
+            <img src="appfooter.png" alt="App Store">
+            <img src="playimage-11@2x.png" alt="Google Play">
+        </div>
+    </footer>
+    
+    <div class="footer-bottom">
+        <p>All Rights Reserved for KFU © 2025 | Designed and Developed by Deanship of E-Learning and Information Technology | <a href="#">Policies</a> | <a href="#">Site Map</a></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Skills functionality
+            const skillsTags = document.getElementById('skills-tags');
+            const skillInput = document.getElementById('skill-input');
+            const addSkillBtn = document.getElementById('add-skill-btn');
+            const skillsHiddenInput = document.getElementById('skills');
+            const skillOptions = document.querySelectorAll('.skill-options .option-item');
+            
+            // Interests functionality
+            const interestsTags = document.getElementById('interests-tags');
+            const interestInput = document.getElementById('interest-input');
+            const addInterestBtn = document.getElementById('add-interest-btn');
+            const interestsHiddenInput = document.getElementById('interests');
+            const interestOptions = document.querySelectorAll('.interest-options .option-item');
+            
+            let selectedSkills = [];
+            let selectedInterests = [];
+            
+            // Add skill from input
+            function addSkill() {
+                const skill = skillInput.value.trim();
+                if (skill && !selectedSkills.includes(skill)) {
+                    selectedSkills.push(skill);
+                    updateSkillsDisplay();
+                    skillInput.value = '';
+                }
+            }
+            
+            // Add interest from input
+            function addInterest() {
+                const interest = interestInput.value.trim();
+                if (interest && !selectedInterests.includes(interest)) {
+                    selectedInterests.push(interest);
+                    updateInterestsDisplay();
+                    interestInput.value = '';
+                }
+            }
+            
+            // Update skills display
+            function updateSkillsDisplay() {
+                skillsTags.innerHTML = '';
+                selectedSkills.forEach(skill => {
+                    const tag = document.createElement('div');
+                    tag.className = 'tag';
+                    tag.innerHTML = `
+                        ${skill}
+                        <span class="tag-remove" data-skill="${skill}">×</span>
+                    `;
+                    skillsTags.appendChild(tag);
+                });
+                
+                // Update hidden input
+                skillsHiddenInput.value = JSON.stringify(selectedSkills);
+                
+                // Update selected state in options
+                skillOptions.forEach(option => {
+                    if (selectedSkills.includes(option.dataset.value)) {
+                        option.classList.add('selected');
+                    } else {
+                        option.classList.remove('selected');
+                    }
+                });
+            }
+            
+            // Update interests display
+            function updateInterestsDisplay() {
+                interestsTags.innerHTML = '';
+                selectedInterests.forEach(interest => {
+                    const tag = document.createElement('div');
+                    tag.className = 'tag';
+                    tag.innerHTML = `
+                        ${interest}
+                        <span class="tag-remove" data-interest="${interest}">×</span>
+                    `;
+                    interestsTags.appendChild(tag);
+                });
+                
+                // Update hidden input
+                interestsHiddenInput.value = JSON.stringify(selectedInterests);
+                
+                // Update selected state in options
+                interestOptions.forEach(option => {
+                    if (selectedInterests.includes(option.dataset.value)) {
+                        option.classList.add('selected');
+                    } else {
+                        option.classList.remove('selected');
+                    }
+                });
+            }
+            
+            // Remove skill
+            skillsTags.addEventListener('click', function(e) {
+                if (e.target.classList.contains('tag-remove')) {
+                    const skill = e.target.dataset.skill;
+                    selectedSkills = selectedSkills.filter(s => s !== skill);
+                    updateSkillsDisplay();
+                }
+            });
+            
+            // Remove interest
+            interestsTags.addEventListener('click', function(e) {
+                if (e.target.classList.contains('tag-remove')) {
+                    const interest = e.target.dataset.interest;
+                    selectedInterests = selectedInterests.filter(i => i !== interest);
+                    updateInterestsDisplay();
+                }
+            });
+            
+            // Add skill from options
+            skillOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const skill = this.dataset.value;
+                    if (selectedSkills.includes(skill)) {
+                        selectedSkills = selectedSkills.filter(s => s !== skill);
+                    } else {
+                        selectedSkills.push(skill);
+                    }
+                    updateSkillsDisplay();
+                });
+            });
+            
+            // Add interest from options
+            interestOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const interest = this.dataset.value;
+                    if (selectedInterests.includes(interest)) {
+                        selectedInterests = selectedInterests.filter(i => i !== interest);
+                    } else {
+                        selectedInterests.push(interest);
+                    }
+                    updateInterestsDisplay();
+                });
+            });
+            
+            // Event listeners
+            addSkillBtn.addEventListener('click', addSkill);
+            skillInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addSkill();
+                }
+            });
+            
+            addInterestBtn.addEventListener('click', addInterest);
+            interestInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addInterest();
+                }
+            });
+            
+            // Form submission
+            document.getElementById('registrationForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate passwords match
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match!');
+                    return;
+                }
+                
+                if (password.length < 8) {
+                    alert('Password must be at least 8 characters long!');
+                    return;
+                }
+                
+                // Prepare user data
+                const userData = {
+                    name: document.getElementById('name').value,
+                    college: document.getElementById('college').value,
+                    email: document.getElementById('email').value,
+                    skills: selectedSkills,
+                    interests: selectedInterests,
+                    password: password // Note: In production, you should hash this password
+                };
+                
+                // Store user data in localStorage
+                localStorage.setItem('currentUser', JSON.stringify(userData));
+                localStorage.setItem('userRegistered', 'true');
+                localStorage.setItem('userLoggedIn', 'true');
+                
+                // Store skills separately for easy access in progress page
+                localStorage.setItem('userSkills', JSON.stringify(selectedSkills));
+                
+                // Redirect to home or progress page
+                window.location.href = 'progress.html';
+            });
+        });
+    </script>
+</body>
+</html>

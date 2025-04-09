@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KFU Link - Career Pathways</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #0E6C78;
+            --secondary-color: #d4a048;
+            --dark-accent: #094f5a;
+            --light-text: #ffffff;
+            --dark-text: #333333;
+            --gray-bg: #f5f5f5;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--dark-text);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: var(--gray-bg);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0E6C78;
+            padding: 10px 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 28px;
+        }
+
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .sign-out {
+            background-color: #d4a048;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .sign-out:hover {
+            background-color: #b28436;
+        }
+
+        .profile {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: gray;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .right-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        main {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .highlight {
+            color: var(--secondary-color);
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin: 40px 0 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+        
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+        
+        .pathway-card h4 {
+            color: var(--light-text);
+            background-color: var(--dark-accent);
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin: 0 0 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .pathway-card h3 {
+            color: var(--primary-color);
+            margin: 0 0 15px;
+            font-size: 1.4rem;
+        }
+        
+        .pathway-card p {
+            color: #555;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .card-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            background-color: var(--secondary-color);
+            color: var(--light-text);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            flex: 1;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .btn:hover {
+            background-color: #b28436;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--secondary-color);
+            color: var(--secondary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(212, 160, 72, 0.1);
+        }
+        
+        /* Courses Columns Styles */
+        .courses-columns-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .courses-column {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .column-title {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        .free-courses-list, .paid-courses-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .course-item {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            background-color: var(--gray-bg);
+            transition: var(--transition);
+        }
+
+        .course-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-item h5 {
+            margin: 0 0 8px;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .course-item p {
+            margin: 0 0 10px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .course-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--secondary-color);
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .course-link:hover {
+            text-decoration: underline;
+        }
+        
+        .level-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .beginner {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .intermediate {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+        
+        .advanced {
+            background-color: #f3e5f5;
+            color: #8e24aa;
+        }
+        
+        .outlook-card {
+            text-align: center;
+            padding: 25px;
+        }
+        
+        .outlook-card h4 {
+            color: var(--secondary-color);
+            margin: 0 0 15px;
+            font-size: 1.2rem;
+        }
+        
+        .outlook-card p {
+            color: var(--light-text);
+            margin: 0;
+            line-height: 1.5;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .footer {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            padding: 40px 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            font-size: 0.9rem;
+        }
+        
+        .footer h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .footer a {
+            color: var(--light-text);
+            text-decoration: none;
+            transition: var(--transition);
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+            color: var(--secondary-color);
+        }
+        
+        .footer img {
+            height: 35px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            background-color: var(--dark-accent);
+            padding: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .footer-bottom a {
+            display: inline;
+            margin: 0 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 15px;
+            }
+            
+            main {
+                padding: 20px 15px;
+            }
+            
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer {
+                grid-template-columns: 1fr;
+                padding: 30px 15px;
+                gap: 20px;
+            }
+            
+            .card-buttons {
+                flex-direction: column;
+            }
+            
+            .courses-columns-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .nav-button {
+    background-color: #d4a048;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.nav-button:hover {
+    background-color: #b28436;
+}
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="home.html" style="text-decoration: none;">
+                <img src="headlogo.png" alt="Logo">
+            </a>
+        </div>
+        <nav>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="Progress.html" class="nav-link"><i class="fas fa-chart-line"></i> Progress</a></li>
+                <li class="nav-item"><a href="pathway.html" class="nav-link"><i class="fas fa-road"></i> Pathways</a></li>
+                <li class="nav-item"><a href="Opportunities.html" class="nav-link"><i class="fas fa-briefcase"></i> Opportunities</a></li>
+            </ul>
+        </nav>
+        <div class="right-section">
+            <button class="sign-out">Sign Out</button>
+            <div class="profile">JS</div>
+        </div>
+    </header>
+    
+    <main>
+        <div class="page-header">
+            <h2>Your <span class="highlight">Career Pathways</span></h2>
+            <p class="subtitle">Based on your skills, interests, and current market trends</p>
+        </div>
+    
+        <section id="pathwaysSection">
+            <h3 class="section-title">Top Recommended Pathways</h3>
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+            <div class="card-container" id="pathwaysContainer" style="display: none;">
+                <!-- Pathways will be loaded here dynamically -->
+            </div>
+        </section>
+    
+        <section id="coursesSection" style="display: none;">
+            <h3 class="section-title">Recommended Courses & Skills Development</h3>
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+            <div class="courses-columns-container" id="coursesColumnsContainer" style="display: none;">
+                <div class="courses-column">
+                    <h4 class="column-title">Free Courses</h4>
+                    <div class="free-courses-list" id="freeCoursesList"></div>
+                </div>
+                <div class="courses-column">
+                    <h4 class="column-title">Paid Courses</h4>
+                    <div class="paid-courses-list" id="paidCoursesList"></div>
+                </div>
+            </div>
+        </section>
+    
+        <section id="outlookSection" style="display: none;">
+            <h3 class="section-title">Career Outlook</h3>
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+            <div class="card-container" id="outlookContainer" style="display: none;">
+                <!-- Career outlook will be loaded here dynamically -->
+            </div>
+        </section>
+    </main>
+    
+    <footer class="footer">
+        <div>
+            <h4>Contact Us</h4>
+            <p>920002366</p>
+            <p>Email: info@kfu.edu.sa</p>
+            <p>P.O. Box: Eastern Province - AlAhsa</p>
+            <p>P.O. Box 400 - Post Code 31982</p>
+        </div>
+        <div>
+            <h4>National Address</h4>
+            <p>7057 - King Faisal University</p>
+            <p>Unit No. 1</p>
+            <p>Hofuf 3959-36362</p>
+        </div>
+        <div>
+            <h4>Important Links</h4>
+            <a href="#">Vision 2030</a>
+            <a href="#">Ministry of Education</a>
+            <a href="#">Saudi Aramco</a>
+            <a href="#">Unified National Platform GOVSA</a>
+            <a href="#">The Embassy of Saudi Arabia - Washington</a>
+            <a href="#">Digital Government Authority</a>
+        </div>
+        <div>
+            <h4>Download King Faisal University App</h4>
+            <img src="appfooter.png" alt="App Store">
+            <img src="playimage-11@2x.png" alt="Google Play">
+        </div>
+    </footer>
+    <div class="footer-bottom">
+        <p>All Rights Reserved for KFU © 2025 | Designed and Developed by Deanship of E-Learning and Information Technology | <a href="#">Policies</a> | <a href="#">Site Map</a></p>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="profile-modal">
+        <div class="profile-content">
+            <div class="profile-header">
+                <div class="profile-pic">
+                    <img src="default-profile.jpg" alt="Profile Picture" id="profileImage">
+                    <button class="edit-pic-btn">Edit</button>
+                </div>
+                <h2 id="profileName">Ahmad</h2>
+                <p id="profileCollege">computer science and information systems </p>
+            </div>
+            
+            <div class="profile-section">
+                <h3>Personal Information</h3>
+                <div class="info-item">
+                    <span>Email:</span>
+                    <span id="profileEmail">222444555@kfu.Student.edu.sa</span>
+                </div>
+                <div class="info-item">
+                    <span>Student ID:</span>
+                    <span id="profileId">222444555</span>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <h3>Certifications</h3>
+                <div id="profileCertifications" class="certifications-list">
+                    <p>No certifications added yet</p>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <h3>Skills</h3>
+                <div id="profileSkills" class="skills-list">
+                    <p>No skills added yet</p>
+                </div>
+    
+<button id="generateResume">Generate Resume</button>
+<button class="close-profile-btn">Close</button>
+</div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get user data from localStorage
+            const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+            const skills = JSON.parse(localStorage.getItem('userSkills')) || [];
+            const certifications = JSON.parse(localStorage.getItem('certifications')) || [];
+            const interests = JSON.parse(localStorage.getItem('userInterests')) || [];
+            
+            // Set profile initials
+            if (currentUser.name) {
+                const names = currentUser.name.split(' ');
+                const initials = names[0].charAt(0) + (names.length > 1 ? names[names.length - 1].charAt(0) : '');
+                document.querySelector('.profile').textContent = initials.toUpperCase();
+            }
+            
+            // Sign out functionality
+            document.querySelector('.sign-out').addEventListener('click', function() {
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = 'login.html';
+            });
+            
+            // Function to call AI API for pathway recommendations
+            async function getPathwayRecommendations() {
+                const userData = {
+                    skills,
+                    certifications,
+                    interests,
+                    major: currentUser.major || 'Computer Science', // Default if not specified
+                    educationLevel: currentUser.educationLevel || 'Undergraduate' // Default if not specified
+                };
+                
+                try {
+                    // Simulate API call (replace with actual API call)
+                    // In a real implementation, you would use axios or fetch to call your backend
+                    // which would then call the AI API (like OpenAI, Anthropic, etc.)
+                    
+                    // Mock response for demonstration
+                    const mockResponse = {
+                        pathways: [
+                            {
+                                category: "TECH CAREER",
+                                title: "Software Development",
+                                description: "A comprehensive pathway focused on programming, software engineering principles, and application development with high market demand and excellent growth potential.",
+                                matchScore: 95
+                            },
+                            {
+                                category: "DATA SCIENCE",
+                                title: "Data Analytics",
+                                description: "Explore rewarding careers in data analysis, business intelligence, and data-driven decision making across various industries.",
+                                matchScore: 92
+                            },
+                            {
+                                category: "CREATIVE TECH",
+                                title: "UX/UI Design",
+                                description: "Combine creativity with technology to design intuitive user experiences and interfaces for modern digital products and services.",
+                                matchScore: 88
+                            }
+                        ]
+                    };
+                    
+                    // Simulate API delay
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    
+                    return mockResponse;
+                    
+                    // Actual implementation would look more like:
+                    /*
+                    const response = await axios.post('/api/pathway-recommendations', {
+                        userData
+                    });
+                    return response.data;
+                    */
+                } catch (error) {
+                    console.error('Error getting pathway recommendations:', error);
+                    return { pathways: [] };
+                }
+            }
+            
+            // Function to call AI API for course recommendations
+            async function getCourseRecommendations(pathwayTitle) {
+                try {
+                    // Simulate API call (replace with actual API call)
+                    
+                    // Mock response for demonstration
+                    const mockCourses = {
+                        "Software Development": [
+                            {
+                                name: "Introduction to Programming",
+                                description: "Foundational course covering basic programming concepts and logic",
+                                level: "Beginner",
+                                platform: "Coursera",
+                                link: "https://www.coursera.org/learn/introduction-to-programming",
+                                price: "Free"
+                            },
+                            {
+                                name: "Data Structures & Algorithms",
+                                description: "Core technical skills for efficient problem solving in software development",
+                                level: "Intermediate",
+                                platform: "Udemy",
+                                link: "https://www.udemy.com/course/data-structures-algorithms/",
+                                price: "Paid"
+                            },
+                            {
+                                name: "Full Stack Web Development",
+                                description: "Learn to build complete web applications with frontend and backend technologies",
+                                level: "Intermediate",
+                                platform: "freeCodeCamp",
+                                link: "https://www.freecodecamp.org/learn",
+                                price: "Free"
+                            },
+                            {
+                                name: "Software Engineering Fundamentals",
+                                description: "Learn software development methodologies and best practices",
+                                level: "Intermediate",
+                                platform: "edX",
+                                link: "https://www.edx.org/course/software-engineering-fundamentals",
+                                price: "Paid"
+                            },
+                            {
+                                name: "Advanced JavaScript Concepts",
+                                description: "Deep dive into modern JavaScript features and patterns",
+                                level: "Advanced",
+                                platform: "YouTube",
+                                link: "https://www.youtube.com/playlist?list=PLZlA0Gpn_vH-0FlQnruw2rd1HuiYJHHkm",
+                                price: "Free"
+                            }
+                        ],
+                        "Data Analytics": [
+                            {
+                                name: "Data Analysis with Python",
+                                description: "Learn to analyze data using Python libraries like Pandas and NumPy",
+                                level: "Beginner",
+                                platform: "Coursera",
+                                link: "https://www.coursera.org/learn/data-analysis-with-python",
+                                price: "Free"
+                            },
+                            {
+                                name: "SQL for Data Science",
+                                description: "Master SQL for querying databases in data analysis contexts",
+                                level: "Beginner",
+                                platform: "Udemy",
+                                link: "https://www.udemy.com/course/sql-for-data-science/",
+                                price: "Paid"
+                            },
+                            {
+                                name: "Data Visualization with Tableau",
+                                description: "Create compelling visualizations to communicate data insights",
+                                level: "Intermediate",
+                                platform: "Coursera",
+                                link: "https://www.coursera.org/learn/data-visualization-tableau",
+                                price: "Free"
+                            },
+                            {
+                                name: "Machine Learning for Beginners",
+                                description: "Introduction to machine learning concepts and applications",
+                                level: "Intermediate",
+                                platform: "Kaggle",
+                                link: "https://www.kaggle.com/learn/intro-to-machine-learning",
+                                price: "Free"
+                            },
+                            {
+                                name: "Business Intelligence Fundamentals",
+                                description: "Learn how to transform data into business insights",
+                                level: "Intermediate",
+                                platform: "LinkedIn Learning",
+                                link: "https://www.linkedin.com/learning/business-intelligence-foundations",
+                                price: "Paid"
+                            }
+                        ],
+                        "UX/UI Design": [
+                            {
+                                name: "User Experience Design Fundamentals",
+                                description: "Learn the core principles of UX design and research",
+                                level: "Beginner",
+                                platform: "Udemy",
+                                link: "https://www.udemy.com/course/user-experience-design-fundamentals/",
+                                price: "Paid"
+                            },
+                            {
+                                name: "UI Design with Figma",
+                                description: "Master Figma for creating beautiful user interfaces",
+                                level: "Beginner",
+                                platform: "YouTube",
+                                link: "https://www.youtube.com/playlist?list=PLXDU_eVOJTx7QHLShNqIXL1Cgbxj7HlN4",
+                                price: "Free"
+                            },
+                            {
+                                name: "Interaction Design Specialization",
+                                description: "Comprehensive course on designing interactive digital products",
+                                level: "Intermediate",
+                                platform: "Coursera",
+                                link: "https://www.coursera.org/specializations/interaction-design",
+                                price: "Paid"
+                            },
+                            {
+                                name: "Design Thinking for Innovation",
+                                description: "Apply design thinking methodology to solve complex problems",
+                                level: "Intermediate",
+                                platform: "Coursera",
+                                link: "https://www.coursera.org/learn/design-thinking-innovation",
+                                price: "Free"
+                            },
+                            {
+                                name: "Advanced Prototyping Techniques",
+                                description: "Learn advanced prototyping methods for UX designers",
+                                level: "Advanced",
+                                platform: "Skillshare",
+                                link: "https://www.skillshare.com/classes/Advanced-Prototyping-Techniques/123456789",
+                                price: "Paid"
+                            }
+                        ]
+                    };
+                    
+                    // Simulate API delay
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    return mockCourses[pathwayTitle] || [];
+                    
+                    // Actual implementation would look more like:
+                    /*
+                    const response = await axios.post('/api/course-recommendations', {
+                        pathway: pathwayTitle,
+                        userSkills: skills
+                    });
+                    return response.data.courses;
+                    */
+                } catch (error) {
+                    console.error('Error getting course recommendations:', error);
+                    return [];
+                }
+            }
+            
+            // Function to call AI API for career outlook
+            async function getCareerOutlook(pathwayTitle) {
+                try {
+                    // Simulate API call (replace with actual API call)
+                    
+                    // Mock response for demonstration
+                    const mockOutlooks = {
+                        "Software Development": [
+                            {
+                                title: "Market Growth",
+                                content: "Software Development jobs expected to grow 22% over the next 5 years with increasing digital transformation"
+                            },
+                            {
+                                title: "Salary Range",
+                                content: "Entry-level: $60-75K | Mid-level: $85-110K | Senior: $120K+ | Leadership: $150K+"
+                            },
+                            {
+                                title: "Job Opportunities",
+                                content: "125+ matching positions currently available in your region with 42 new postings this week"
+                            }
+                        ],
+                        "Data Analytics": [
+                            {
+                                title: "Market Growth",
+                                content: "Data Analytics roles projected to grow 18% annually as businesses increasingly rely on data-driven decisions"
+                            },
+                            {
+                                title: "Salary Range",
+                                content: "Entry-level: $55-70K | Mid-level: $75-95K | Senior: $100K+ | Leadership: $130K+"
+                            },
+                            {
+                                title: "Job Opportunities",
+                                content: "89+ analytics positions available locally with demand across finance, healthcare, and tech sectors"
+                            }
+                        ],
+                        "UX/UI Design": [
+                            {
+                                title: "Market Growth",
+                                content: "UX/UI design jobs growing at 15% annually as companies prioritize user-centered digital experiences"
+                            },
+                            {
+                                title: "Salary Range",
+                                content: "Entry-level: $50-65K | Mid-level: $70-90K | Senior: $95K+ | Leadership: $120K+"
+                            },
+                            {
+                                title: "Job Opportunities",
+                                content: "67+ design roles available with particularly strong demand in e-commerce and SaaS companies"
+                            }
+                        ]
+                    };
+                    
+                    // Simulate API delay
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                    
+                    return mockOutlooks[pathwayTitle] || [];
+                    
+                    // Actual implementation would look more like:
+                    /*
+                    const response = await axios.post('/api/career-outlook', {
+                        pathway: pathwayTitle,
+                        location: currentUser.location || 'Global'
+                    });
+                    return response.data.outlook;
+                    */
+                } catch (error) {
+                    console.error('Error getting career outlook:', error);
+                    return [];
+                }
+            }
+            
+            // Function to render pathway cards
+            function renderPathways(pathways) {
+                const container = document.getElementById('pathwaysContainer');
+                container.innerHTML = '';
+                
+                pathways.forEach(pathway => {
+                    const card = document.createElement('div');
+                    card.className = 'card pathway-card';
+                    card.innerHTML = `
+                        <h4>${pathway.category}</h4>
+                        <h3>${pathway.title}</h3>
+                        <p>${pathway.description}</p>
+                        <div class="card-buttons">
+                            <button class="btn view-pathway-btn" data-pathway="${pathway.title}">View Details</button>
+                            <button class="btn btn-outline save-pathway-btn" data-pathway="${pathway.title}">Save Path</button>
+                        </div>
+                        <div style="position: absolute; top: 15px; right: 15px; background-color: #e8f5e9; color: #388e3c; padding: 3px 8px; border-radius: 12px; font-size: 0.75rem;">
+                            ${pathway.matchScore}% Match
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+                
+                // Add event listeners to view buttons
+                document.querySelectorAll('.view-pathway-btn').forEach(btn => {
+                    btn.addEventListener('click', async function() {
+                        const pathwayTitle = this.getAttribute('data-pathway');
+                        await showPathwayDetails(pathwayTitle);
+                    });
+                });
+                
+                // Add event listeners to save buttons
+                document.querySelectorAll('.save-pathway-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const pathwayTitle = this.getAttribute('data-pathway');
+                        savePathway(pathwayTitle);
+                    });
+                });
+                
+                // Show the container
+                document.querySelector('#pathwaysSection .loading').style.display = 'none';
+                container.style.display = 'grid';
+            }
+            
+            // Function to render course recommendations in two columns
+            function renderCourses(courses) {
+                const freeCoursesList = document.getElementById('freeCoursesList');
+                const paidCoursesList = document.getElementById('paidCoursesList');
+                
+                // Clear existing content
+                freeCoursesList.innerHTML = '';
+                paidCoursesList.innerHTML = '';
+                
+                // Separate free and paid courses
+                const freeCourses = courses.filter(course => course.price.toLowerCase() === 'free');
+                const paidCourses = courses.filter(course => course.price.toLowerCase() === 'paid');
+                
+                // Render free courses
+                if (freeCourses.length > 0) {
+                    freeCourses.forEach(course => {
+                        const courseItem = document.createElement('div');
+                        courseItem.className = 'course-item';
+                        courseItem.innerHTML = `
+                            <h5>${course.name}</h5>
+                            <p>${course.description}</p>
+                            <div class="course-meta">
+                                <span class="level-badge ${course.level.toLowerCase()}">${course.level}</span>
+                                <span>${course.platform}</span>
+                            </div>
+                            <a href="${course.link}" target="_blank" class="course-link">View Course</a>
+                        `;
+                        freeCoursesList.appendChild(courseItem);
+                    });
+                } else {
+                    freeCoursesList.innerHTML = '<p>No free courses recommended for this pathway.</p>';
+                }
+                
+                // Render paid courses
+                if (paidCourses.length > 0) {
+                    paidCourses.forEach(course => {
+                        const courseItem = document.createElement('div');
+                        courseItem.className = 'course-item';
+                        courseItem.innerHTML = `
+                            <h5>${course.name}</h5>
+                            <p>${course.description}</p>
+                            <div class="course-meta">
+                                <span class="level-badge ${course.level.toLowerCase()}">${course.level}</span>
+                                <span>${course.platform}</span>
+                            </div>
+                            <a href="${course.link}" target="_blank" class="course-link">View Course</a>
+                        `;
+                        paidCoursesList.appendChild(courseItem);
+                    });
+                } else {
+                    paidCoursesList.innerHTML = '<p>No paid courses recommended for this pathway.</p>';
+                }
+                
+                // Show the columns container
+                document.querySelector('#coursesSection .loading').style.display = 'none';
+                document.getElementById('coursesColumnsContainer').style.display = 'grid';
+            }
+            
+            // Function to render career outlook
+            function renderOutlook(outlookItems) {
+                const container = document.getElementById('outlookContainer');
+                container.innerHTML = '';
+                
+                outlookItems.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'card outlook-card';
+                    card.style.backgroundColor = item.title === 'Salary Range' ? 'var(--dark-accent)' : 'var(--primary-color)';
+                    card.innerHTML = `
+                        <h4>${item.title}</h4>
+                        <p>${item.content}</p>
+                    `;
+                    container.appendChild(card);
+                });
+                
+                // Show the container
+                document.querySelector('#outlookSection .loading').style.display = 'none';
+                container.style.display = 'grid';
+            }
+            
+            // Function to show pathway details (courses and outlook)
+            async function showPathwayDetails(pathwayTitle) {
+                // Show loading states
+                document.getElementById('coursesSection').style.display = 'block';
+                document.getElementById('outlookSection').style.display = 'block';
+                document.querySelector('#coursesSection .loading').style.display = 'flex';
+                document.querySelector('#outlookSection .loading').style.display = 'flex';
+                document.getElementById('coursesColumnsContainer').style.display = 'none';
+                document.getElementById('outlookContainer').style.display = 'none';
+                
+                // Scroll to courses section
+                document.getElementById('coursesSection').scrollIntoView({ behavior: 'smooth' });
+                
+                // Get and render courses
+                const courses = await getCourseRecommendations(pathwayTitle);
+                renderCourses(courses);
+                
+                // Get and render career outlook
+                const outlook = await getCareerOutlook(pathwayTitle);
+                renderOutlook(outlook);
+            }
+            
+            // Function to save pathway (mock implementation)
+            function savePathway(pathwayTitle) {
+                // In a real implementation, this would save to the user's profile
+                alert(`Pathway "${pathwayTitle}" saved to your profile!`);
+                
+                // You would typically make an API call to save this to the backend
+                /*
+                axios.post('/api/save-pathway', {
+                    userId: currentUser.id,
+                    pathway: pathwayTitle
+                }).then(response => {
+                    alert('Pathway saved successfully!');
+                }).catch(error => {
+                    console.error('Error saving pathway:', error);
+                    alert('Failed to save pathway. Please try again.');
+                });
+                */
+            }
+            
+            // Initialize the page
+            async function init() {
+                // Load pathway recommendations
+                const { pathways } = await getPathwayRecommendations();
+                
+                if (pathways.length > 0) {
+                    renderPathways(pathways);
+                } else {
+                    document.querySelector('#pathwaysSection .loading').innerHTML = 
+                        '<p>No pathway recommendations found based on your profile.</p>';
+                }
+            }
+            
+            init();
+        });
+    </script>
+</body>
+</html>
