@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KFU Link - Hackathons</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #0E6C78;
+            --secondary-color: #d4a048;
+            --dark-accent: #094f5a;
+            --light-text: #ffffff;
+            --dark-text: #333333;
+            --gray-bg: #f5f5f5;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+            --border-radius: 8px;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--dark-text);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: var(--gray-bg);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0E6C78;
+            padding: 10px 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 28px;
+        }
+
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .sign-out {
+            background-color: #d4a048;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .sign-out:hover {
+            background-color: #b28436;
+        }
+
+        .profile {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: gray;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .right-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .page-header {
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .page-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin: 40px 0 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+        
+        .hackathons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .hackathon-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hackathon-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+        
+        .hackathon-card h3 {
+            color: var(--primary-color);
+            margin: 0 0 15px;
+            font-size: 1.3rem;
+        }
+        
+        .hackathon-card p {
+            margin: 0 0 20px;
+            line-height: 1.5;
+            color: #555;
+        }
+        
+        .hackathon-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            color: #666;
+        }
+        
+        .meta-item i {
+            margin-right: 8px;
+            color: var(--secondary-color);
+        }
+        
+        .hackathon-themes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .theme-badge {
+            background-color: rgba(14, 108, 120, 0.1);
+            color: var(--primary-color);
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+        }
+        
+        .hackathon-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .register-btn {
+            background-color: var(--secondary-color);
+            color: var(--light-text);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            flex: 1;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .register-btn:hover {
+            background-color: #b28436;
+        }
+        
+        .details-btn {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            flex: 1;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .details-btn:hover {
+            background-color: var(--dark-accent);
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            width: 80%;
+            max-width: 700px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: var(--dark-accent);
+        }
+
+        .hackathon-details h2 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .hackathon-details h3 {
+            color: var(--secondary-color);
+            margin: 20px 0 10px;
+        }
+
+        .hackathon-details p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .hackathon-details ul {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        .hackathon-details li {
+            margin-bottom: 8px;
+        }
+        
+        .footer {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            padding: 40px 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            font-size: 0.9rem;
+        }
+        
+        .footer h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .footer a {
+            color: var(--light-text);
+            text-decoration: none;
+            transition: var(--transition);
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+            color: var(--secondary-color);
+        }
+        
+        .footer img {
+            height: 35px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            background-color: var(--dark-accent);
+            padding: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .footer-bottom a {
+            display: inline;
+            margin: 0 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 15px;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .hackathons-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer {
+                grid-template-columns: 1fr;
+                padding: 30px 15px;
+                gap: 20px;
+            }
+            
+            .modal-content {
+                width: 90%;
+                margin: 10% auto;
+                padding: 15px;
+            }
+        }
+
+        .nav-button {
+            background-color: #d4a048;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .nav-button:hover {
+            background-color: #b28436;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="home.html" style="text-decoration: none;">
+                <img src="headlogo.png" alt="Logo">
+            </a>
+        </div>
+        <nav>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="Progress.html" class="nav-link"><i class="fas fa-chart-line"></i> Progress</a></li>
+                <li class="nav-item"><a href="pathway.html" class="nav-link"><i class="fas fa-road"></i> Pathways</a></li>
+                <li class="nav-item"><a href="Opportunities.html" class="nav-link"><i class="fas fa-briefcase"></i> Opportunities</a></li>
+                <li class="nav-item"><a href="hackathons.html" class="nav-link"><i class="fas fa-code"></i> Hackathons</a></li>
+            </ul>
+        </nav>
+        <div class="right-section">
+            <button class="sign-out">Sign Out</button>
+            <div class="profile">JS</div>
+        </div>
+    </header>
+
+    <div class="content">
+        <div class="page-header">
+            <h2>Hackathon Opportunities</h2>
+            <p class="page-subtitle">Discover hackathons matched to your skills and interests</p>
+        </div>
+
+        <h3 class="section-title">Recommended Hackathons</h3>
+        <div class="loading" id="hackathonsLoading">
+            <div class="spinner"></div>
+        </div>
+        <div class="hackathons-container" id="hackathonsContainer" style="display: none;">
+            <!-- Hackathons will be loaded here dynamically -->
+        </div>
+
+        <h3 class="section-title">Upcoming Hackathons</h3>
+        <div class="loading" id="upcomingLoading">
+            <div class="spinner"></div>
+        </div>
+        <div class="hackathons-container" id="upcomingContainer" style="display: none;">
+            <!-- Upcoming hackathons will be loaded here dynamically -->
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div>
+            <h4>Contact Us</h4>
+            <p>920002366</p>
+            <p>Email: info@kfu.edu.sa</p>
+            <p>P.O. Box: Eastern Province - AlAhsa</p>
+            <p>P.O. Box 400 - Post Code 31982</p>
+        </div>
+        <div>
+            <h4>National Address</h4>
+            <p>7057 - King Faisal University</p>
+            <p>Unit No. 1</p>
+            <p>Hofuf 3959-36362</p>
+        </div>
+        <div>
+            <h4>Important Links</h4>
+            <a href="#">Vision 2030</a>
+            <a href="#">Ministry of Education</a>
+            <a href="#">Saudi Aramco</a>
+            <a href="#">Unified National Platform GOVSA</a>
+            <a href="#">The Embassy of Saudi Arabia - Washington</a>
+            <a href="#">Digital Government Authority</a>
+        </div>
+        <div>
+            <h4>Download King Faisal University App</h4>
+            <img src="appfooter.png" alt="App Store">
+            <img src="playimage-11@2x.png" alt="Google Play">
+        </div>
+    </footer>
+
+    <div class="footer-bottom">
+        <p>All Rights Reserved for KFU © 2025 | Designed and Developed by Deanship of E-Learning and Information Technology | <a href="#">Policies</a> | <a href="#">Site Map</a></p>
+    </div>
+
+    <!-- Hackathon Details Modal -->
+    <div id="hackathonModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="hackathon-details" id="hackathonDetails">
+                <!-- Hackathon details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="profile-modal">
+        <div class="profile-content">
+            <div class="profile-header">
+                <div class="profile-pic">
+                    <img src="default-profile.jpg" alt="Profile Picture" id="profileImage">
+                    <button class="edit-pic-btn">Edit</button>
+                </div>
+                <h2 id="profileName">Ahmad</h2>
+                <p id="profileCollege">computer science and information systems </p>
+            </div>
+            
+            <div class="profile-section">
+                <h3>Personal Information</h3>
+                <div class="info-item">
+                    <span>Email:</span>
+                    <span id="profileEmail">222444555@kfu.Student.edu.sa</span>
+                </div>
+                <div class="info-item">
+                    <span>Student ID:</span>
+                    <span id="profileId">222444555</span>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <h3>Certifications</h3>
+                <div id="profileCertifications" class="certifications-list">
+                    <p>No certifications added yet</p>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <h3>Skills</h3>
+                <div id="profileSkills" class="skills-list">
+                    <p>No skills added yet</p>
+                </div>
+            </div>
+            
+            <button id="generateResume">Generate Resume</button>
+            <button class="close-profile-btn">Close</button>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get user data from localStorage
+            const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+            const skills = JSON.parse(localStorage.getItem('userSkills')) || [];
+            const interests = JSON.parse(localStorage.getItem('userInterests')) || [];
+            
+            // Set profile initials
+            if (currentUser.name) {
+                const names = currentUser.name.split(' ');
+                const initials = names[0].charAt(0) + (names.length > 1 ? names[names.length - 1].charAt(0) : '');
+                document.querySelector('.profile').textContent = initials.toUpperCase();
+            }
+            
+            // Sign out functionality
+            document.querySelector('.sign-out').addEventListener('click', function() {
+                localStorage.removeItem('userLoggedIn');
+                window.location.href = 'login.html';
+            });
+            
+            // Function to calculate match score based on skills and interests
+            function calculateMatchScore(hackathonThemes) {
+                let matchScore = 0;
+                
+                // Calculate skill matches
+                const skillMatches = hackathonThemes.filter(theme => 
+                    skills.some(skill => 
+                        skill.toLowerCase().includes(theme.toLowerCase()) || 
+                        theme.toLowerCase().includes(skill.toLowerCase())
+                    )
+                ).length;
+                
+                // Calculate interest matches
+                const interestMatches = hackathonThemes.filter(theme => 
+                    interests.some(interest => 
+                        interest.toLowerCase().includes(theme.toLowerCase()) || 
+                        theme.toLowerCase().includes(interest.toLowerCase())
+                    )
+                ).length;
+                
+                // Total matches (skills count double)
+                const totalMatches = skillMatches * 2 + interestMatches;
+                const maxPossible = hackathonThemes.length * 2;
+                
+                // Calculate percentage
+                matchScore = Math.round((totalMatches / maxPossible) * 100);
+                
+                return Math.min(matchScore, 100); // Cap at 100%
+            }
+            
+            // Function to get hackathon recommendations
+            async function getHackathonRecommendations() {
+                try {
+                    // Mock data with registration links
+                    const allHackathons = [
+                        {
+                            title: "Tech Innovation Challenge",
+                            description: "A 48-hour hackathon focused on creating innovative tech solutions for real-world problems.",
+                            themes: ["Artificial Intelligence", "Machine Learning", "Data Science", "Web Development"],
+                            date: "2025-05-15",
+                            duration: "48 hours",
+                            location: "Virtual",
+                            organizer: "TechHub Saudi",
+                            prize: "50,000 SAR",
+                            registrationLink: "https://techhub-sa.com/hackathons/innovation-challenge",
+                            details: {
+                                overview: "Join the Tech Innovation Challenge to solve pressing problems using cutting-edge technology. This hackathon brings together the brightest minds to create impactful solutions.",
+                                eligibility: "Open to all students and professionals aged 18+",
+                                requirements: "Basic programming knowledge recommended",
+                                schedule: [
+                                    "Day 1: Opening ceremony & team formation",
+                                    "Day 2: Coding & mentorship sessions",
+                                    "Day 3: Presentations & awards"
+                                ],
+                                judgingCriteria: [
+                                    "Innovation (30%)",
+                                    "Technical complexity (25%)",
+                                    "Potential impact (25%)",
+                                    "Presentation (20%)"
+                                ]
+                            }
+                        },
+                        {
+                            title: "Sustainability Hack",
+                            description: "Develop solutions to environmental challenges in this eco-focused hackathon.",
+                            themes: ["Sustainability", "IoT", "Data Analysis", "Renewable Energy"],
+                            date: "2025-06-10",
+                            duration: "24 hours",
+                            location: "KFU Campus",
+                            organizer: "GreenTech Arabia",
+                            prize: "30,000 SAR + Incubation Opportunity",
+                            registrationLink: "https://greentech-arabia.com/hackathons/sustainability",
+                            details: {
+                                overview: "The Sustainability Hack challenges participants to create technology solutions for environmental sustainability in the Middle East region.",
+                                eligibility: "Students and young professionals (under 30)",
+                                requirements: "Interest in sustainability topics",
+                                schedule: [
+                                    "Morning: Problem statements revealed",
+                                    "Afternoon: Solution development",
+                                    "Evening: Presentations"
+                                ],
+                                judgingCriteria: [
+                                    "Environmental impact (40%)",
+                                    "Feasibility (30%)",
+                                    "Creativity (20%)",
+                                    "Presentation (10%)"
+                                ]
+                            }
+                        },
+                        {
+                            title: "FinTech Hackathon",
+                            description: "Create innovative financial technology solutions for the Saudi market.",
+                            themes: ["Blockchain", "Banking", "Mobile Apps", "Security"],
+                            date: "2025-07-22",
+                            duration: "36 hours",
+                            location: "Riyadh",
+                            organizer: "Saudi FinTech Association",
+                            prize: "100,000 SAR in prizes",
+                            registrationLink: "https://fintech-sa.org/hackathon",
+                            details: {
+                                overview: "The Saudi FinTech Hackathon aims to foster innovation in financial services through technology.",
+                                eligibility: "Teams of 2-5 members (students or professionals)",
+                                requirements: "Background in finance or technology preferred",
+                                schedule: [
+                                    "Day 1: Keynote & team formation",
+                                    "Day 2: Development & mentoring",
+                                    "Day 3: Final pitches"
+                                ],
+                                judgingCriteria: [
+                                    "Market potential (30%)",
+                                    "Technical implementation (30%)",
+                                    "User experience (20%)",
+                                    "Regulatory compliance (20%)"
+                                ]
+                            }
+                        },
+                        {
+                            title: "HealthTech Challenge",
+                            description: "Develop digital health solutions to improve healthcare accessibility.",
+                            themes: ["Healthcare", "AI", "Mobile Development", "Data Privacy"],
+                            date: "2025-08-05",
+                            duration: "48 hours",
+                            location: "Hybrid (Jeddah + Virtual)",
+                            organizer: "Ministry of Health",
+                            prize: "75,000 SAR + Pilot Opportunity",
+                            registrationLink: "https://moh.gov.sa/hackathon",
+                            details: {
+                                overview: "This hackathon focuses on creating technology solutions to address healthcare challenges in Saudi Arabia.",
+                                eligibility: "Open to all with interest in healthcare technology",
+                                requirements: "None",
+                                schedule: [
+                                    "Day 1: Problem statements & team formation",
+                                    "Day 2: Solution development",
+                                    "Day 3: Presentations & awards"
+                                ],
+                                judgingCriteria: [
+                                    "Healthcare impact (40%)",
+                                    "Innovation (30%)",
+                                    "Technical quality (20%)",
+                                    "Presentation (10%)"
+                                ]
+                            }
+                        },
+                        {
+                            title: "EduTech Hack",
+                            description: "Create innovative solutions to transform education in Saudi Arabia.",
+                            themes: ["Education", "Gamification", "Web Development", "Mobile Apps"],
+                            date: "2025-09-12",
+                            duration: "24 hours",
+                            location: "Virtual",
+                            organizer: "Ministry of Education",
+                            prize: "40,000 SAR",
+                            registrationLink: "https://moe.gov.sa/edutech-hack",
+                            details: {
+                                overview: "The EduTech Hack invites participants to develop technology solutions that can enhance learning experiences.",
+                                eligibility: "Students and educators",
+                                requirements: "None",
+                                schedule: [
+                                    "Morning: Opening & team formation",
+                                    "Afternoon: Development",
+                                    "Evening: Presentations"
+                                ],
+                                judgingCriteria: [
+                                    "Educational value (40%)",
+                                    "Innovation (30%)",
+                                    "Usability (20%)",
+                                    "Presentation (10%)"
+                                ]
+                            }
+                        }
+                    ];
+                    
+                    // Simulate API delay
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    
+                    // Calculate match scores for each hackathon
+                    const hackathonsWithScores = allHackathons.map(hackathon => {
+                        const matchScore = calculateMatchScore(hackathon.themes);
+                        return {
+                            ...hackathon,
+                            matchScore
+                        };
+                    });
+                    
+                    // Sort by match score (highest first) and date (soonest first)
+                    return hackathonsWithScores.sort((a, b) => {
+                        if (b.matchScore !== a.matchScore) {
+                            return b.matchScore - a.matchScore;
+                        }
+                        return new Date(a.date) - new Date(b.date);
+                    });
+                    
+                } catch (error) {
+                    console.error('Error getting hackathon recommendations:', error);
+                    return [];
+                }
+            }
+            
+            // Function to get upcoming hackathons (all, sorted by date)
+            async function getUpcomingHackathons() {
+                try {
+                    // Mock data
+                    const upcomingHackathons = [
+                        {
+                            title: "AI for Good",
+                            description: "Hackathon focused on using artificial intelligence for social impact projects.",
+                            themes: ["Artificial Intelligence", "Social Good", "Data Science"],
+                            date: "2025-10-15",
+                            duration: "36 hours",
+                            location: "Virtual",
+                            organizer: "AI Saudi",
+                            prize: "60,000 SAR",
+                            registrationLink: "https://ai-saudi.org/hackathon",
+                            details: {
+                                overview: "Use AI to create solutions for social challenges in areas like healthcare, education, and environment.",
+                                eligibility: "Open to all",
+                                requirements: "Basic AI knowledge recommended",
+                                schedule: [
+                                    "Day 1: Opening & team formation",
+                                    "Day 2: Development",
+                                    "Day 3: Presentations"
+                                ],
+                                judgingCriteria: [
+                                    "Social impact (40%)",
+                                    "Technical implementation (30%)",
+                                    "Innovation (20%)",
+                                    "Presentation (10%)"
+                                ]
+                            }
+                        },
+                        {
+                            title: "Smart Cities Challenge",
+                            description: "Develop solutions to make Saudi cities smarter and more efficient.",
+                            themes: ["IoT", "Urban Planning", "Data Visualization", "Sustainability"],
+                            date: "2025-11-05",
+                            duration: "48 hours",
+                            location: "Riyadh",
+                            organizer: "Smart Cities Saudi",
+                            prize: "80,000 SAR",
+                            registrationLink: "https://smartcities.sa/hackathon",
+                            details: {
+                                overview: "Create technology solutions to address urban challenges in Saudi cities.",
+                                eligibility: "Teams of 3-5 members",
+                                requirements: "None",
+                                schedule: [
+                                    "Day 1: Problem statements revealed",
+                                    "Day 2: Solution development",
+                                    "Day 3: Final presentations"
+                                ],
+                                judgingCriteria: [
+                                    "Urban impact (40%)",
+                                    "Feasibility (30%)",
+                                    "Innovation (20%)",
+                                    "Presentation (10%)"
+                                ]
+                            }
+                        },
+                        {
+                            title: "Women in Tech Hackathon",
+                            description: "All-female hackathon to promote women in technology fields.",
+                            themes: ["Web Development", "Mobile Apps", "UI/UX Design", "Entrepreneurship"],
+                            date: "2025-12-08",
+                            duration: "24 hours",
+                            location: "Jeddah",
+                            organizer: "Women Techmakers Saudi",
+                            prize: "50,000 SAR + Mentorship",
+                            registrationLink: "https://womentechmakers.sa/hackathon",
+                            details: {
+                                overview: "An exclusive hackathon for female developers and designers to showcase their skills.",
+                                eligibility: "Female participants only",
+                                requirements: "None",
+                                schedule: [
+                                    "Morning: Opening & team formation",
+                                    "Afternoon: Development",
+                                    "Evening: Presentations"
+                                ],
+                                judgingCriteria: [
+                                    "Technical implementation (40%)",
+                                    "Design quality (30%)",
+                                    "Business potential (20%)",
+                                    "Presentation (10%)"
+                                ]
+                            }
+                        }
+                    ];
+                    
+                    // Simulate API delay
+                    await new Promise(resolve => setTimeout(resolve, 1200));
+                    
+                    // Sort by date (soonest first)
+                    return upcomingHackathons.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    
+                } catch (error) {
+                    console.error('Error getting upcoming hackathons:', error);
+                    return [];
+                }
+            }
+            
+            // Function to render hackathon cards
+            function renderHackathons(hackathons, containerId) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                
+                if (hackathons.length === 0) {
+                    container.innerHTML = '<p>No hackathons found at this time. Please check back later.</p>';
+                    return;
+                }
+                
+                hackathons.forEach(hackathon => {
+                    const card = document.createElement('div');
+                    card.className = 'hackathon-card';
+                    
+                    // Determine match badge class based on score
+                    let badgeClass = 'match-80';
+                    if (hackathon.matchScore >= 95) badgeClass = 'match-95';
+                    else if (hackathon.matchScore >= 90) badgeClass = 'match-90';
+                    else if (hackathon.matchScore >= 85) badgeClass = 'match-85';
+                    
+                    card.innerHTML = `
+                        ${hackathon.matchScore ? `<div style="position: absolute; top: 15px; right: 15px;" class="badge ${badgeClass}">${hackathon.matchScore}% Match</div>` : ''}
+                        <h3>${hackathon.title}</h3>
+                        <p>${hackathon.description}</p>
+                        
+                        <div class="hackathon-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                ${new Date(hackathon.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-clock"></i>
+                                ${hackathon.duration}
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                ${hackathon.location}
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-trophy"></i>
+                                ${hackathon.prize}
+                            </div>
+                        </div>
+                        
+                        <div class="hackathon-themes">
+                            ${hackathon.themes.map(theme => `<span class="theme-badge">${theme}</span>`).join('')}
+                        </div>
+                        
+                        <div class="hackathon-actions">
+                            <button class="register-btn" data-link="${hackathon.registrationLink}">Register Now</button>
+                            <button class="details-btn" data-hackathon='${JSON.stringify(hackathon)}'>View Details</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+                
+                // Add event listeners to Register buttons
+                document.querySelectorAll(`#${containerId} .register-btn`).forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const registrationLink = this.getAttribute('data-link');
+                        window.open(registrationLink, '_blank');
+                    });
+                });
+                
+                // Add event listeners to Details buttons
+                document.querySelectorAll(`#${containerId} .details-btn`).forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const hackathonData = JSON.parse(this.getAttribute('data-hackathon'));
+                        showHackathonDetails(hackathonData);
+                    });
+                });
+                
+                // Show the container
+                document.getElementById(`${containerId.replace('Container', 'Loading')}`).style.display = 'none';
+                container.style.display = 'grid';
+            }
+            
+            // Function to show hackathon details in modal
+            function showHackathonDetails(hackathon) {
+                const modal = document.getElementById('hackathonModal');
+                const detailsContainer = document.getElementById('hackathonDetails');
+                
+                detailsContainer.innerHTML = `
+                    <h2>${hackathon.title}</h2>
+                    <p><strong>Organizer:</strong> ${hackathon.organizer}</p>
+                    <p><strong>Date:</strong> ${new Date(hackathon.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                    <p><strong>Duration:</strong> ${hackathon.duration}</p>
+                    <p><strong>Location:</strong> ${hackathon.location}</p>
+                    <p><strong>Prize:</strong> ${hackathon.prize}</p>
+                    
+                    <h3>About the Hackathon</h3>
+                    <p>${hackathon.details.overview}</p>
+                    
+                    <h3>Themes</h3>
+                    <div class="hackathon-themes">
+                        ${hackathon.themes.map(theme => `<span class="theme-badge">${theme}</span>`).join('')}
+                    </div>
+                    
+                    <h3>Eligibility</h3>
+                    <p>${hackathon.details.eligibility}</p>
+                    
+                    <h3>Requirements</h3>
+                    <p>${hackathon.details.requirements || 'None specified'}</p>
+                    
+                    <h3>Schedule</h3>
+                    <ul>
+                        ${hackathon.details.schedule.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    
+                    <h3>Judging Criteria</h3>
+                    <ul>
+                        ${hackathon.details.judgingCriteria.map(criterion => `<li>${criterion}</li>`).join('')}
+                    </ul>
+                    
+                    <button class="register-btn" style="margin-top: 20px;" data-link="${hackathon.registrationLink}">Register Now</button>
+                `;
+                
+                // Add event listener to modal register button
+                detailsContainer.querySelector('.register-btn').addEventListener('click', function() {
+                    window.open(hackathon.registrationLink, '_blank');
+                });
+                
+                modal.style.display = 'block';
+                
+                // Close modal when clicking X
+                document.querySelector('.close-modal').addEventListener('click', function() {
+                    modal.style.display = 'none';
+                });
+                
+                // Close modal when clicking outside
+                window.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Initialize the page
+            async function init() {
+                // Load recommended hackathons
+                const recommendedHackathons = await getHackathonRecommendations();
+                renderHackathons(recommendedHackathons, 'hackathonsContainer');
+                
+                // Load upcoming hackathons
+                const upcomingHackathons = await getUpcomingHackathons();
+                renderHackathons(upcomingHackathons, 'upcomingContainer');
+            }
+            
+            init();
+        });
+    </script>
+</body>
+</html>
