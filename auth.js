@@ -5,14 +5,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set up profile functionality (if elements exist)
     setupProfileModal();
     
-    // Set up sign out buttons (if any exist)
     setupSignOut();
     
-    // Initialize profile icon if user data exists
     initProfileIcon();
+    setupResumeGenerator();
 });
 
-// Profile Functions
 function setupProfileModal() {
     const profileIcon = document.querySelector('.profile');
     const profileModal = document.getElementById('profileModal');
@@ -20,18 +18,15 @@ function setupProfileModal() {
     
     if (!profileIcon || !profileModal || !closeProfileBtn) return;
     
-    // Open profile modal when profile icon is clicked
     profileIcon.addEventListener('click', function() {
         profileModal.style.display = 'block';
         loadProfileData();
     });
     
-    // Close profile modal
     closeProfileBtn.addEventListener('click', function() {
         profileModal.style.display = 'none';
     });
     
-    // Close when clicking outside the modal
     window.addEventListener('click', function(event) {
         if (event.target === profileModal) {
             profileModal.style.display = 'none';
@@ -43,8 +38,9 @@ function loadProfileData() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
     const certifications = JSON.parse(localStorage.getItem('certifications')) || [];
     const skills = JSON.parse(localStorage.getItem('userSkills')) || [];
+    const hackathons = JSON.parse(localStorage.getItem('hackathons')) || [];
+    const projects = JSON.parse(localStorage.getItem('projects')) || [];
     
-    // Set basic info
     if (currentUser.name) {
         document.getElementById('profileName').textContent = currentUser.name;
     }
@@ -65,7 +61,7 @@ function loadProfileData() {
         document.getElementById('profileCollege').textContent = collegeMap[currentUser.college] || currentUser.college;
     }
     
-    // Set certifications
+    // Certifications
     const certsContainer = document.getElementById('profileCertifications');
     certsContainer.innerHTML = certifications.length > 0 ? '' : '<p>No certifications added yet</p>';
     
@@ -76,7 +72,7 @@ function loadProfileData() {
         certsContainer.appendChild(certElement);
     });
     
-    // Set skills
+    // Skills
     const skillsContainer = document.getElementById('profileSkills');
     skillsContainer.innerHTML = skills.length > 0 ? '' : '<p>No skills added yet</p>';
     
@@ -86,6 +82,49 @@ function loadProfileData() {
         skillElement.textContent = skill;
         skillsContainer.appendChild(skillElement);
     });
+    
+    // Hackathons
+    const hackathonsContainer = document.getElementById('profileHackathons') || createProfileSection('Hackathons', 'profileHackathons');
+    hackathonsContainer.innerHTML = hackathons.length > 0 ? '' : '<p>No hackathons added yet</p>';
+    
+    hackathons.forEach(hackathon => {
+        const hackathonElement = document.createElement('div');
+        hackathonElement.className = 'profile-item';
+        hackathonElement.innerHTML = `
+            <strong>${hackathon.name}</strong> - ${hackathon.date}<br>
+            <small>Role: ${hackathon.role || 'Not specified'}</small><br>
+            <small>Outcome: ${hackathon.outcome || 'Participated'}</small>
+        `;
+        hackathonsContainer.appendChild(hackathonElement);
+    });
+    
+    // Projects
+    const projectsContainer = document.getElementById('profileProjects') || createProfileSection('Projects', 'profileProjects');
+    projectsContainer.innerHTML = projects.length > 0 ? '' : '<p>No projects added yet</p>';
+    
+    projects.forEach(project => {
+        const projectElement = document.createElement('div');
+        projectElement.className = 'profile-item';
+        projectElement.innerHTML = `
+            <strong>${project.name}</strong>${project.date ? ' - ' + project.date : ''}<br>
+            ${project.link ? `<small><a href="${project.link}" target="_blank">View Project</a></small><br>` : ''}
+            <small>Technologies: ${project.technologies.join(', ')}</small>
+        `;
+        projectsContainer.appendChild(projectElement);
+    });
+}
+
+// Helper function to create profile sections
+function createProfileSection(title, id) {
+    const profileContent = document.querySelector('.profile-content');
+    const section = document.createElement('div');
+    section.className = 'profile-section';
+    section.innerHTML = `
+        <h3>${title}</h3>
+        <div id="${id}" class="profile-list"></div>
+    `;
+    profileContent.insertBefore(section, document.getElementById('generateResume').parentNode);
+    return document.getElementById(id);
 }
 
 function initProfileIcon() {
@@ -109,24 +148,15 @@ function setupSignOut() {
 }
 
 function handleSignOut() {
-    // Clear user session data
     localStorage.removeItem('userLoggedIn');
     localStorage.removeItem('currentUser');
     localStorage.removeItem('certifications');
     localStorage.removeItem('userSkills');
+    localStorage.removeItem('hackathons');
+    localStorage.removeItem('projects');
     
-    // Refresh the page
     window.location.reload();
 }
-
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    setupProfileModal();
-    setupSignOut();
-    initProfileIcon();
-    setupResumeGenerator();
-});
 
 function setupResumeGenerator() {
     const resumeButton = document.getElementById('generateResume');
@@ -139,21 +169,23 @@ function generateResume() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    // Fetch profile data from the modal
     const name = document.getElementById('profileName')?.textContent || "Your Name";
     const email = document.getElementById('profileEmail')?.textContent || "your.email@example.com";
     const college = document.getElementById('profileCollege')?.textContent || "Not provided";
     const studentId = document.getElementById('profileId')?.textContent || "N/A";
     
-    // Fetch certifications
     const certElements = document.querySelectorAll("#profileCertifications .certification-badge");
     const certifications = Array.from(certElements).map(cert => cert.textContent);
 
-    // Fetch skills
     const skillElements = document.querySelectorAll("#profileSkills .skill-badge");
     const skills = Array.from(skillElements).map(skill => skill.textContent);
     
-    // Fetch additional custom fields
+    const hackathonElements = document.querySelectorAll("#profileHackathons .profile-item");
+    const hackathons = Array.from(hackathonElements).map(el => el.textContent.trim());
+    
+    const projectElements = document.querySelectorAll("#profileProjects .profile-item");
+    const projects = Array.from(projectElements).map(el => el.textContent.trim());
+    
     const customFields = [];
     document.querySelectorAll("#customFields .custom-field").forEach(field => {
         const label = field.querySelector(".field-label")?.textContent;
@@ -163,8 +195,7 @@ function generateResume() {
         }
     });
 
-    // Resume Styling - Header Section
-    doc.setFillColor(33, 37, 41); // Dark header background
+    doc.setFillColor(33, 37, 41);
     doc.rect(0, 0, 210, 40, "F");
     doc.setFont("helvetica", "bold");
     doc.setTextColor(255, 255, 255);
@@ -175,11 +206,9 @@ function generateResume() {
     doc.setTextColor(200, 200, 200);
     doc.text(email, 15, 30);
 
-    // Section Divider
     doc.setDrawColor(150, 150, 150);
     doc.line(10, 45, 200, 45);
 
-    // Personal Info
     doc.setFontSize(16);
     doc.setTextColor(0, 0, 0);
     doc.text(" College", 10, 55);
@@ -189,10 +218,8 @@ function generateResume() {
     doc.text(" Student ID", 10, 75);
     doc.text(studentId, 15, 85);
 
-    // Section Divider
     doc.line(10, 95, 200, 95);
 
-    // Certifications Section
     let yPosition = 105;
     doc.setFontSize(16);
     doc.text(" Certifications", 10, yPosition);
@@ -203,16 +230,14 @@ function generateResume() {
         doc.text("No certifications added.", 15, yPosition);
     } else {
         certifications.forEach(cert => {
-            doc.text(`✔ ${cert}`, 15, yPosition);
+            doc.text(` ${cert}`, 15, yPosition);
             yPosition += 10;
         });
     }
 
-    // Section Divider
     doc.line(10, yPosition + 5, 200, yPosition + 5);
     yPosition += 15;
 
-    // Skills Section
     doc.setFontSize(16);
     doc.text(" Skills", 10, yPosition);
     doc.setFontSize(12);
@@ -222,16 +247,48 @@ function generateResume() {
         doc.text("No skills added.", 15, yPosition);
     } else {
         skills.forEach(skill => {
-            doc.text(`• ${skill}`, 15, yPosition);
+            doc.text(` ${skill}`, 15, yPosition);
             yPosition += 10;
         });
     }
 
-    // Section Divider
     doc.line(10, yPosition + 5, 200, yPosition + 5);
     yPosition += 15;
 
-    // Custom Fields Section
+    doc.setFontSize(16);
+    doc.text(" Hackathons", 10, yPosition);
+    doc.setFontSize(12);
+    yPosition += 10;
+
+    if (hackathons.length === 0) {
+        doc.text("No hackathons added.", 15, yPosition);
+    } else {
+        hackathons.forEach(hackathon => {
+            doc.text(` ${hackathon}`, 15, yPosition);
+            yPosition += 10;
+        });
+    }
+
+    doc.line(10, yPosition + 5, 200, yPosition + 5);
+    yPosition += 15;
+
+    doc.setFontSize(16);
+    doc.text(" Projects", 10, yPosition);
+    doc.setFontSize(12);
+    yPosition += 10;
+
+    if (projects.length === 0) {
+        doc.text("No projects added.", 15, yPosition);
+    } else {
+        projects.forEach(project => {
+            doc.text(` ${project}`, 15, yPosition);
+            yPosition += 10;
+        });
+    }
+
+    doc.line(10, yPosition + 5, 200, yPosition + 5);
+    yPosition += 15;
+
     if (customFields.length > 0) {
         doc.setFontSize(16);
         doc.text(" Additional Information", 10, yPosition);
@@ -246,9 +303,5 @@ function generateResume() {
         doc.line(10, yPosition + 5, 200, yPosition + 5);
     }
 
-    // Save the Resume
     doc.save(`${name}_Resume.pdf`);
 }
-
-// Attach event listener
-document.getElementById("generateResume")?.addEventListener("click", generateResume);
